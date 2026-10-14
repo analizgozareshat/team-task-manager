@@ -423,6 +423,7 @@ const sampleTasks=MIGRATION_BACKUP.data.tasks;
 let data={members:[],workTypes:[],tasks:[]};
 let activity=JSON.parse(localStorage.getItem(ACT)||'null')||structuredClone(MIGRATION_BACKUP.activity||[]);
 let currentUser=null,currentProfile=null,isAdmin=false,realtimeChannel=null,onlineReady=false,syncBusy=false;
+let sessionKeepAliveTimer=null,dataAutoRefreshTimer=null,realtimeWatchdogTimer=null,lastOnlineRefreshAt=0;
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 let editTaskId=null,editMemberId=null,editWorkTypeId=null,pendingDelete=null,tempMemberPhoto='';
 const $=id=>document.getElementById(id);
@@ -488,8 +489,55 @@ function applyPermissions(){
  $('accessRoleText').textContent=roleFa(currentProfile?.role);$('currentUserChip').textContent=(currentProfile?.full_name||'کاربر')+' • '+roleFa(currentProfile?.role);
  if(!isAdmin){document.querySelectorAll('[data-action="status"],[data-action="toggle"]').forEach(el=>el.disabled=true);}
 }
-async function startRealtime(){if(realtimeChannel)await sb.removeChannel(realtimeChannel);realtimeChannel=sb.channel('team-tasks-live').on('postgres_changes',{event:'*',schema:'public',table:'tasks'},async()=>{if(!syncBusy){try{await loadOnlineData(false);toast('تغییر جدید آنلاین دریافت شد.')}catch(e){console.error(e)}}}).subscribe();}
-async function finishLogin(session){currentUser=session.user;await fetchCurrentProfile();await loadOnlineData(false);onlineReady=true;document.body.classList.remove('auth-locked');$('authGate').style.display='none';applyPermissions();await startRealtime();setPage('dashboard')}
+async function startRealtime(){
+ if(realtimeChannel)await sb.removeChannel(realtimeChannel);
+ realtimeChannel=sb.channel('team-tasks-live')
+  .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},async()=>{
+    if(!syncBusy){try{await loadOnlineData(false);lastOnlineRefreshAt=Date.now();toast('تغییر جدید آنلاین دریافت شد.')}catch(e){console.error(e)}}
+  })
+  .subscribe(status=>{
+    if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Realtime connection:',status);
+  });
+}
+async function keepSessionAlive(){
+ try{
+  const {data:{session},error}=await sb.auth.getSession();
+  if(error)throw error;
+  if(!session)return;
+  currentUser=session.user;
+  const expiresAtMs=(session.expires_at||0)*1000;
+  if(expiresAtMs && expiresAtMs-Date.now()<10*60*1000){
+    const {data,error:refreshError}=await sb.auth.refreshSession();
+    if(refreshError)throw refreshError;
+    if(data?.session)currentUser=data.session.user;
+  }
+ }catch(e){console.warn('Session keep-alive failed:',e)}
+}
+async function autoRefreshOnlineData(){
+ if(!onlineReady||syncBusy||document.hidden||!navigator.onLine)return;
+ try{await keepSessionAlive();await loadOnlineData(false);lastOnlineRefreshAt=Date.now();}
+ catch(e){console.warn('Auto refresh failed:',e)}
+}
+function startOnlineKeepAlive(){
+ clearInterval(sessionKeepAliveTimer);clearInterval(dataAutoRefreshTimer);clearInterval(realtimeWatchdogTimer);
+ sessionKeepAliveTimer=setInterval(keepSessionAlive,4*60*1000);
+ dataAutoRefreshTimer=setInterval(autoRefreshOnlineData,60*1000);
+ realtimeWatchdogTimer=setInterval(async()=>{
+   if(!onlineReady||document.hidden||!navigator.onLine)return;
+   try{
+     const state=realtimeChannel?.state;
+     if(!realtimeChannel||state==='closed'||state==='errored')await startRealtime();
+   }catch(e){console.warn('Realtime reconnect failed:',e)}
+ },2*60*1000);
+}
+async function refreshAfterReturn(){
+ if(!onlineReady||document.hidden||!navigator.onLine)return;
+ await autoRefreshOnlineData();
+ try{await startRealtime();}catch(e){console.warn(e)}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshAfterReturn()});
+window.addEventListener('online',refreshAfterReturn);
+async function finishLogin(session){currentUser=session.user;await fetchCurrentProfile();await loadOnlineData(false);lastOnlineRefreshAt=Date.now();onlineReady=true;document.body.classList.remove('auth-locked');$('authGate').style.display='none';applyPermissions();await startRealtime();startOnlineKeepAlive();setPage('dashboard')}
 async function doLogin(){const u=normalizeUsername($('loginUsername').value),pw=$('loginPassword').value;if(!u||!pw){$('authError').textContent='نام کاربری و رمز عبور را وارد کنید.';$('authError').style.display='block';return}$('authError').style.display='none';$('authLoading').style.display='block';$('loginBtn').disabled=true;try{const {data:auth,error}=await sb.auth.signInWithPassword({email:u+'@'+INTERNAL_EMAIL_DOMAIN,password:pw});if(error)throw error;await finishLogin(auth.session)}catch(e){console.error(e);$('authError').textContent='خطای ورود: '+(e?.message||String(e));$('authError').style.display='block'}finally{$('authLoading').style.display='none';$('loginBtn').disabled=false}}
 async function bootAuth(){try{const {data:{session}}=await sb.auth.getSession();if(session)await finishLogin(session);else{$('authGate').style.display='flex';document.body.classList.add('auth-locked')}}catch(e){console.error(e);$('authError').textContent='خطای اتصال: '+(e?.message||String(e));$('authError').style.display='block'}}
 
@@ -1182,7 +1230,11 @@ $('importJsonInput').onchange=async e=>{
  }catch(err){console.error(err);alert('انتقال انجام نشد: '+(err?.message||String(err)))}
 };
 $('loginBtn').onclick=doLogin;$('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});$('loginUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPassword').focus()});
-$('logoutBtn').onclick=async()=>{if(realtimeChannel)await sb.removeChannel(realtimeChannel);await sb.auth.signOut();location.reload()};
+$('logoutBtn').onclick=async()=>{clearInterval(sessionKeepAliveTimer);clearInterval(dataAutoRefreshTimer);clearInterval(realtimeWatchdogTimer);if(realtimeChannel)await sb.removeChannel(realtimeChannel);await sb.auth.signOut();location.reload()};
+sb.auth.onAuthStateChange((event,session)=>{
+ if(session?.user)currentUser=session.user;
+ if(event==='TOKEN_REFRESHED')console.info('Session refreshed automatically.');
+});
 bootAuth();
 </script>
 </body>
