@@ -1,0 +1,1325 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مدیریت تسک‌های تیم — گزارش مدیریتی V25</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#152238;--muted:#7a879b;--line:#e6eaf1;--blue:#2f80ed;--nav:#14243c;--green:#1ea966;--orange:#f2a100;--red:#e65050;--purple:#805ad5;--shadow:0 8px 24px rgba(20,34,55,.06)}
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#152842,#0f1c30);padding:20px 14px;color:#fff;position:sticky;top:0;height:100vh}
+.brand{font-size:22px;font-weight:800;padding:4px 10px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand small{display:block;font-size:11px;color:#b7c4d6;font-weight:400;margin-top:6px}
+.admin-pill{margin:14px 4px 0;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.05);font-size:11px;color:#d7e2f0}
+.nav{display:grid;gap:8px;margin-top:18px}.nav button{border:0;background:transparent;color:#ccd6e4;text-align:right;padding:13px 14px;border-radius:11px}
+.nav button:hover,.nav button.active{background:linear-gradient(135deg,#2f80ed,#4d93f4);color:#fff}
+.main{padding:24px;min-width:0}.topbar{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px}
+.title h1{font-size:25px;margin:0}.title p{font-size:12px;color:var(--muted);margin:6px 0 0}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.primary,.ghost,.danger{border-radius:10px;padding:10px 14px;font-weight:700}
+.primary{background:var(--blue);border:0;color:#fff}.ghost{background:#fff;border:1px solid var(--line);color:var(--text)}.danger{background:#fff0f0;border:1px solid #ffd1d1;color:#c53737}
+.page{display:none}.page.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+.stat,.panel{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px}
+.stat{padding:18px}.stat .num{font-size:28px;font-weight:900}.stat .label{font-size:12px;color:var(--muted);margin-top:5px}
+.blue{color:var(--blue)}.green{color:var(--green)}.orange{color:var(--orange)}.red{color:var(--red)}.purple{color:var(--purple)}
+.panel{padding:16px;margin-bottom:18px}.panel h2{font-size:17px;margin:0 0 14px}
+.members{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.member{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff}
+.member-head,.row-between{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.avatar{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e9f2ff;color:#236ad5;font-weight:900;overflow:hidden;flex:0 0 84px;border:3px solid #d9e7fb;font-size:28px;box-shadow:0 4px 12px rgba(47,128,237,.12)}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-preview{width:86px;height:86px;border-radius:50%;overflow:hidden;background:#e9f2ff;color:#236ad5;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;border:2px solid #dce8f8;margin-bottom:8px}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.photo-actions input[type=file]{max-width:260px;font-size:11px}
+.reminder-box{border:1px solid #dbe8fb;background:#f7fbff;border-radius:12px;padding:12px}
+.reminder-box .reminder-title{font-weight:900;font-size:12px;margin-bottom:10px;color:#255fae}
+.deadline-type{font-weight:800}
+.reminder-badge{display:inline-block;padding:5px 8px;border-radius:8px;background:#fff0d9;color:#9a6200;font-size:10px;font-weight:900;margin-top:5px}
+.alarm-banner{display:none;position:fixed;left:20px;bottom:20px;z-index:100;width:min(420px,calc(100vw - 40px));background:#fff;border:2px solid #f2a100;border-radius:16px;padding:15px;box-shadow:0 18px 50px rgba(0,0,0,.2)}
+.alarm-banner.show{display:block}.alarm-banner h3{margin:0 0 7px;font-size:16px}.alarm-banner p{margin:0 0 12px;font-size:12px;line-height:1.8}
+
+.name{font-weight:900;font-size:20px}.sub{font-size:11px;color:var(--muted);margin-top:4px}
+.mini{display:flex;gap:8px;margin-top:14px}.mini span{flex:1;text-align:center;padding:12px 6px;border-radius:10px;background:#f7f9fc;font-size:11px;font-weight:700;line-height:1.9;color:#24364f;box-shadow:inset 0 0 0 1px #eef2f7}.mini span b{display:block;font-size:20px;font-weight:900;line-height:1.1;color:#152238;margin-bottom:4px}
+.filters{display:grid;grid-template-columns:2fr repeat(5,1fr);gap:9px;margin-bottom:14px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 11px;color:var(--text)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:980px;background:#fff}th,td{padding:11px 10px;border-bottom:1px solid var(--line);font-size:12px;text-align:right;vertical-align:middle}
+th{background:#fafbfd;color:#607086;white-space:nowrap}.task-title{font-weight:800}.done-row{opacity:.58}.done-row .task-title{text-decoration:line-through}
+.badge{display:inline-block;padding:6px 9px;border-radius:8px;font-size:10px;font-weight:800}.badge.high{background:#ffe8e8;color:#c73131}.badge.medium{background:#fff2d4;color:#a46c00}.badge.low{background:#e5f6ec;color:#177e4c}
+.status-select{border:0;border-radius:8px;padding:7px 8px;font-size:10px;font-weight:800}.status-select.todo{background:#edf0f4;color:#637085}.status-select.doing{background:#e4efff;color:#2567ce}.status-select.done{background:#e2f7eb;color:#16834f}.status-select.blocked{background:#fde8e8;color:#c53131}
+.smallbtn{padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:10px}.action-delete{background:#fff0f0;border-color:#ffcaca;color:#bd2f2f;font-weight:800}.action-edit{background:#eef5ff;border-color:#d4e4fb;color:#2769c9;font-weight:800}
+.section-title{font-size:13px;font-weight:800;margin:16px 0 9px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}.hint{font-size:11px;color:var(--muted)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.management-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.management-card{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fff}
+.management-card strong{font-size:24px;display:block;margin-bottom:5px}
+.management-card span{font-size:11px;color:var(--muted)}
+.type-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.type-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fafbfd;text-align:center}
+.type-box b{display:block;font-size:18px;margin-bottom:4px}
+.type-box small{color:var(--muted);font-size:10px}
+.manager-list{display:grid;gap:8px}
+.manager-item{display:grid;grid-template-columns:1fr 1.6fr .8fr .9fr;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11px}
+.manager-item .urgent{color:#c53131;font-weight:800}
+@media(max-width:900px){.management-grid,.type-summary{grid-template-columns:repeat(2,1fr)}.manager-item{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.management-grid,.type-summary,.manager-item{grid-template-columns:1fr}}.kpi{padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}.kpi strong{font-size:22px}.kpi small{display:block;color:var(--muted);margin-top:5px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.day{min-height:110px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px}.day .date{font-size:11px;color:var(--muted);margin-bottom:6px}.task-chip{font-size:10px;padding:5px 6px;border-radius:7px;background:#eef5ff;margin-bottom:5px}
+.timeline{display:grid;gap:9px}.timeline-item{padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:12px}
+.report-row{display:grid;grid-template-columns:1.4fr repeat(4,.7fr);gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:12px}
+.modal{position:fixed;inset:0;background:rgba(8,18,32,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}
+.modal-card{background:#fff;width:min(800px,100%);max-height:92vh;overflow:auto;border-radius:18px;padding:19px;box-shadow:0 25px 70px rgba(0,0,0,.22)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}.modal label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.modal-actions{display:flex;gap:9px;margin-top:15px}
+.toast{display:none;position:sticky;top:10px;z-index:40;margin-bottom:10px;padding:10px 14px;border-radius:10px;background:#e7f7ee;color:#16794a;border:1px solid #c7ecd8;font-size:12px}
+@media(max-width:1050px){.app{grid-template-columns:1fr}.sidebar{height:auto;position:relative}.nav{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(3,1fr)}.members{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.main{padding:14px}.nav{grid-template-columns:1fr 1fr}.stats,.members,.kpi-grid,.filters,.modal-grid{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}.calendar-grid{grid-template-columns:1fr}}
+
+/* Compact team status on dashboard */
+.dashboard-members{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dashboard-member{border:1px solid var(--line);border-radius:11px;background:#fff;padding:9px 10px;display:grid;grid-template-columns:38px 1fr;gap:8px;align-items:center;min-width:0}
+.dashboard-member .dash-avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#e9f2ff;color:#236ad5;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;border:1px solid #d8e6fa}
+.dashboard-member .dash-avatar img{width:100%;height:100%;object-fit:cover}
+.dashboard-member .dash-name{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dashboard-member .dash-role{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.dashboard-member .dash-mini{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.dashboard-member .dash-mini span{background:#f7f9fc;border-radius:7px;padding:5px 3px;text-align:center;font-size:8px;color:#607086;line-height:1.25}
+.dashboard-member .dash-mini b{display:block;font-size:13px;font-weight:900;color:#17243a;margin-bottom:1px}
+.dashboard-team-panel{padding:12px 14px}
+.dashboard-team-panel h2{font-size:14px;margin-bottom:9px}
+.dashboard-alltasks-panel{padding-top:14px}
+@media(max-width:1150px){.dashboard-members{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:850px){.dashboard-members{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.dashboard-members{grid-template-columns:1fr}}
+
+
+/* v15 planning, time-risk colors, manager image report and live feed */
+.dashboard-member{cursor:pointer;transition:.16s ease}
+.dashboard-member:hover{transform:translateY(-2px);box-shadow:0 7px 18px rgba(26,72,135,.10);border-color:#b9d2f5}
+.dashboard-member .dash-name{text-decoration:underline;text-decoration-color:#d6e3f5;text-underline-offset:3px}
+.task-time-green td{background:#effaf3!important}
+.task-time-orange td{background:#fff6e5!important}
+.task-time-yellow td{background:#fff9df!important}
+.task-time-red td{background:#fff0f0!important}
+.task-time-neutral td{background:#fff!important}
+.task-time-green td:first-child{box-shadow:inset -5px 0 #31a76a}
+.task-time-orange td:first-child{box-shadow:inset -5px 0 #e79b20}
+.task-time-yellow td:first-child{box-shadow:inset -5px 0 #d2a514}
+.task-time-red td:first-child{box-shadow:inset -5px 0 #d84b4b}
+.time-state{font-size:9px;font-weight:900;margin-top:5px}
+.time-state.green{color:#198754}.time-state.orange{color:#b86f00}.time-state.yellow{color:#a77e00}.time-state.red{color:#c92f2f}.time-state.neutral{color:#7a879b}
+.plan-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.plan-avatar{width:62px;height:62px;border-radius:50%;overflow:hidden;background:#e9f2ff;color:#236ad5;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px}
+.plan-avatar img{width:100%;height:100%;object-fit:cover}
+.plan-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.plan-kpi{background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center}
+.plan-kpi b{display:block;font-size:18px}.plan-kpi small{font-size:9px;color:var(--muted)}
+.plan-list{display:grid;gap:8px}
+.plan-task{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.plan-task.green{background:#effaf3;border-color:#cbead7}.plan-task.orange{background:#fff6e5;border-color:#f1ddb4}.plan-task.red{background:#fff0f0;border-color:#f0caca}.plan-task.neutral{background:#f8f9fb}
+.plan-task .ptitle{font-weight:900;font-size:12px}.plan-task .pmeta{font-size:9px;color:#65758b;margin-top:5px;line-height:1.8}
+.live-feed{display:grid;gap:6px;max-height:230px;overflow:auto}
+.live-item{display:grid;grid-template-columns:80px 1fr;gap:8px;border-bottom:1px solid var(--line);padding:7px 2px;font-size:10px}
+.live-item time{color:var(--muted);direction:ltr;text-align:left}
+.sync-pill{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 9px;background:#eef5ff;color:#2869c8;font-size:9px;font-weight:900}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#2da66c}
+.manager-report-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.legend-time{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:9px;color:#617086}
+.legend-time span{display:inline-flex;align-items:center;gap:4px}.legend-time i{width:10px;height:10px;border-radius:3px;display:inline-block}
+@media(max-width:650px){.plan-kpis{grid-template-columns:repeat(2,1fr)}}
+
+
+/* v20 dedicated member workspace */
+.member-name-link{cursor:pointer;text-decoration:underline;text-decoration-color:#cfe0f7;text-underline-offset:4px}
+.member-name-link:hover{color:#236ad5}
+.member-workspace{width:min(1180px,96vw);max-height:92vh;overflow:auto}
+.member-workspace-head{display:grid;grid-template-columns:84px 1fr auto;gap:14px;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.member-workspace-avatar{width:84px;height:84px;border-radius:50%;overflow:hidden;background:#e9f2ff;color:#236ad5;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;border:3px solid #dce9fa}
+.member-workspace-avatar img{width:100%;height:100%;object-fit:cover}
+.member-workspace-name{font-size:24px;font-weight:900;color:#17243a}
+.member-workspace-role{font-size:11px;color:var(--muted);margin-top:5px}
+.member-workspace-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:16px 0}
+.member-workspace-kpi{border:1px solid var(--line);background:#f8fafc;border-radius:12px;padding:11px;text-align:center}
+.member-workspace-kpi b{display:block;font-size:21px;font-weight:900;color:#17243a}
+.member-workspace-kpi span{font-size:9px;color:#6d7c90}
+.member-workspace-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 13px}
+.member-workspace-tabs button{border:1px solid #d9e4f2;background:#fff;border-radius:9px;padding:8px 12px;font-size:10px;font-weight:800;color:#53657a;cursor:pointer}
+.member-workspace-tabs button.active{background:#2f80ed;color:#fff;border-color:#2f80ed}
+.member-task-grid{display:grid;gap:8px}
+.member-task-row{display:grid;grid-template-columns:1.5fr .7fr .7fr .8fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff}
+.member-task-row.done{background:#effaf3;border-color:#cbead7}
+.member-task-row.late{background:#fff0f0;border-color:#f0caca}
+.member-task-row.doing{background:#fff6e5;border-color:#f1ddb4}
+.member-task-row.todo{background:#fff9df;border-color:#eee0a8}
+.member-task-row .mtitle{font-size:12px;font-weight:900}
+.member-task-row .mmeta{font-size:9px;color:#6c7b8f;margin-top:4px}
+.member-task-row .mstatus{font-size:10px;font-weight:900}
+.member-task-row.done .mstatus{color:#22965c}.member-task-row.late .mstatus{color:#cf3f45}.member-task-row.doing .mstatus{color:#e58b16}.member-task-row.todo .mstatus{color:#a77e00}
+@media(max-width:850px){.member-workspace-kpis{grid-template-columns:repeat(2,1fr)}.member-task-row{grid-template-columns:1fr 1fr}.member-task-row>div:first-child{grid-column:1/-1}}
+
+
+/* V24 Online / Supabase */
+body.auth-locked .app{display:none}
+.auth-gate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#f4f7fb,#eaf0f8);display:flex;align-items:center;justify-content:center;padding:20px}
+.auth-card{width:min(430px,100%);background:#fff;border:1px solid #dfe6ef;border-radius:24px;box-shadow:0 24px 70px rgba(24,42,70,.15);padding:28px}
+.auth-card h1{margin:0 0 8px;font-size:24px}.auth-card p{margin:0 0 22px;color:#718096;line-height:1.8;font-size:12px}
+.auth-card label{display:block;margin:12px 0 6px;font-size:12px;font-weight:900}.auth-card input{width:100%;box-sizing:border-box}
+.auth-error{display:none;margin-top:12px;background:#fff0f0;color:#b92d2d;border:1px solid #f0caca;border-radius:12px;padding:10px;font-size:12px;line-height:1.7}
+.auth-loading{display:none;margin-top:12px;color:#50627a;font-size:12px}
+.user-box{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.user-chip{background:#eef4ff;border:1px solid #d8e5fb;border-radius:12px;padding:7px 10px;font-size:11px;font-weight:800;color:#2d4f7c}
+
+/* v25 — dedicated executive manager report */
+.executive-report-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.executive-report-head h2{margin:0 0 5px;font-size:20px;color:#17243a}.executive-report-head p{margin:0;color:#718096;font-size:11px;line-height:1.9}
+.executive-summary{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:14px 0 18px}
+.executive-summary-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px 12px;text-align:center;min-height:84px}.executive-summary-card:before{content:"";position:absolute;right:0;top:0;bottom:0;width:5px;background:#d8e2ef}.executive-summary-card b{display:block;font-size:24px;font-weight:900;color:#17243a}.executive-summary-card span{display:block;font-size:9px;color:#718096;margin-top:5px;font-weight:800}.executive-summary-card.green:before{background:#31a76a}.executive-summary-card.yellow:before{background:#d2a514}.executive-summary-card.orange:before{background:#e79b20}.executive-summary-card.red:before{background:#d84b4b}.executive-summary-card.blue:before{background:#2f80ed}.executive-summary-card.purple:before{background:#7656d6}
+.executive-legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin-bottom:14px;font-size:9px;color:#617086}.executive-legend strong{font-size:10px;color:#33445c;margin-left:4px}.executive-legend span{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #e6ebf2;border-radius:99px;padding:5px 8px}.executive-legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.executive-member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.executive-member-card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px;cursor:pointer;transition:.16s ease;box-shadow:0 3px 12px rgba(23,54,95,.035)}.executive-member-card:hover{transform:translateY(-2px);border-color:#b9d2f5;box-shadow:0 9px 24px rgba(23,54,95,.10)}
+.executive-member-top{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding-bottom:11px;border-bottom:1px solid #edf1f6}.executive-member-avatar{width:48px;height:48px;border-radius:50%;overflow:hidden;background:#e9f2ff;color:#236ad5;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;border:1px solid #d8e6fa}.executive-member-avatar img{width:100%;height:100%;object-fit:cover}.executive-member-name{font-size:13px;font-weight:900;color:#17243a}.executive-member-role{font-size:9px;color:#7b8798;margin-top:3px}.executive-member-rate{text-align:center;min-width:52px}.executive-member-rate b{display:block;font-size:17px;color:#22965c}.executive-member-rate span{font-size:8px;color:#7b8798}
+.executive-member-counts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:11px}.executive-member-counts span{text-align:center;border-radius:9px;padding:7px 3px;font-size:8px;font-weight:800;color:#66758a;background:#f7f9fc}.executive-member-counts b{display:block;font-size:14px;margin-bottom:2px;color:#17243a}.executive-member-counts .done{background:#effaf3}.executive-member-counts .done b{color:#22965c}.executive-member-counts .doing{background:#fff9df}.executive-member-counts .doing b{color:#a77e00}.executive-member-counts .near{background:#fff6e5}.executive-member-counts .near b{color:#c17800}.executive-member-counts .late{background:#fff0f0}.executive-member-counts .late b{color:#cf3f45}.executive-member-counts .open{background:#eef5ff}.executive-member-counts .open b{color:#2f6fc2}
+.executive-member-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:9px;color:#6f7e91}.executive-member-foot strong{color:#2f6fc2}.executive-alert{color:#c83c43!important;font-weight:900}.member-task-row.near{background:#fff6e5;border-color:#f1ddb4}.member-task-row.near .mstatus{color:#c17800}.member-task-row.open{background:#f8f9fb;border-color:#e2e7ee}.member-task-row.open .mstatus{color:#6d7b8f}.manager-detail-legend{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:0 0 12px;font-size:9px;color:#68778b}.manager-detail-legend span{display:inline-flex;gap:4px;align-items:center}.manager-detail-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+@media(max-width:1100px){.executive-summary{grid-template-columns:repeat(3,1fr)}.executive-member-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.executive-summary{grid-template-columns:repeat(2,1fr)}.executive-member-grid{grid-template-columns:1fr}.executive-member-counts{grid-template-columns:repeat(2,1fr)}}
+
+.online-pill{display:inline-flex;align-items:center;gap:6px;background:#eaf8f0;color:#16794a;border:1px solid #c9ead8;border-radius:99px;padding:5px 9px;font-size:10px;font-weight:900}.online-dot{width:7px;height:7px;border-radius:50%;background:#27a867}
+.readonly-note{font-size:10px;color:#718096;font-weight:800}.admin-only-hidden{display:none!important}
+.sync-overlay{position:fixed;left:18px;bottom:18px;z-index:9500;background:#172235;color:#fff;border-radius:12px;padding:9px 12px;font-size:11px;display:none;box-shadow:0 8px 30px rgba(0,0,0,.18)}
+
+</style>
+</head>
+<body class="auth-locked">
+<div class="auth-gate" id="authGate"><div class="auth-card"><h1>ورود به مدیریت تیم</h1><p>با نام کاربری و رمز عبوری که برای شما تعریف شده وارد شوید.</p><label>نام کاربری</label><input id="loginUsername" autocomplete="username" placeholder="مثلاً maryam.r"><label>رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"><button class="primary" id="loginBtn" style="width:100%;margin-top:18px">ورود</button><div class="auth-loading" id="authLoading">در حال اتصال به سامانه آنلاین...</div><div class="auth-error" id="authError"></div></div></div>
+<div class="sync-overlay" id="syncOverlay">در حال ذخیره آنلاین...</div>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">مدیریت تیم<small>تسک و پیگیری روزانه</small></div>
+<div class="admin-pill">دسترسی: <b id="accessRoleText">در حال بررسی...</b></div>
+<nav class="nav">
+<button class="active" data-page="dashboard">داشبورد</button>
+<button data-page="today">تسک‌های امروز</button>
+<button data-page="all">همه تسک‌ها <span id="taskMenuCount" style="float:left;background:rgba(255,255,255,.14);padding:2px 7px;border-radius:99px;font-size:10px">0</span></button>
+<button data-page="members">اعضای تیم</button>
+<button data-page="worktypes">نوع کار</button>
+<button data-page="calendar">تقویم</button>
+<button data-page="reports">گزارش‌ها</button>
+<button data-page="activity">تاریخچه</button>
+<button data-page="backup">پشتیبان‌گیری</button>
+</nav>
+</aside>
+<main class="main">
+<div id="toast" class="toast"></div>
+<div class="topbar">
+<div class="title"><h1 id="pageTitle">داشبورد</h1><p id="todayText"></p></div>
+<div class="actions"><span class="online-pill"><i class="online-dot"></i> آنلاین</span><span class="user-chip" id="currentUserChip">—</span><button class="ghost" id="changeAvatarBtn">تغییر عکس پروفایل</button><button class="ghost" id="changePasswordBtn">تغییر رمز عبور</button><button class="ghost" id="logoutBtn">خروج</button><button class="ghost admin-control" id="quickMemberBtn">+ عضو</button><button class="primary" id="addBtn">+ تسک جدید</button></div>
+</div>
+
+<section class="page active" id="page-dashboard">
+<div class="stats">
+<div class="stat"><div class="num blue" id="totalCount">0</div><div class="label">کل تسک‌ها</div></div>
+<div class="stat"><div class="num green" id="doneCount">0</div><div class="label">انجام‌شده</div></div>
+<div class="stat"><div class="num orange" id="doingCount">0</div><div class="label">درحال انجام</div></div>
+<div class="stat"><div class="num red" id="lateCount">0</div><div class="label">عقب‌افتاده</div></div>
+<div class="stat"><div class="num purple" id="blockedCount">0</div><div class="label">متوقف</div></div>
+</div>
+
+<div class="panel">
+  <div class="toolbar">
+    <div>
+      <h2 style="margin-bottom:4px">نمای مدیریتی</h2>
+      <div class="hint">فقط مواردی که برای تصمیم‌گیری و پیگیری سریع مهم هستند</div>
+    </div>
+    <div class="manager-report-actions">
+      <button class="primary" id="exportManagerImageBtn">خروجی عکس گزارش مدیر</button>
+    </div>
+  </div>
+
+  <div class="management-grid">
+    <div class="management-card"><strong class="red" id="mgLate">0</strong><span>تسک عقب‌افتاده</span></div>
+    <div class="management-card"><strong class="orange" id="mgToday">0</strong><span>موعد امروز و باز</span></div>
+    <div class="management-card"><strong class="purple" id="mgBlocked">0</strong><span>تسک متوقف</span></div>
+    <div class="management-card"><strong class="blue" id="mgMedani">0</strong><span>امور محوله آقای مدنی</span></div>
+  </div>
+
+  <div class="section-title">تعداد کارها به تفکیک نوع کار</div>
+  <div class="type-summary" id="managerTypeSummary"></div>
+
+  <div class="section-title">موارد نیازمند توجه مدیریت</div>
+  <div class="manager-list" id="managerAttentionList"></div>
+</div>
+
+<div class="panel dashboard-team-panel">
+<div class="toolbar"><div><h2>وضعیت اعضای تیم</h2><div class="hint">برای دیدن برنامه کاری هر فرد روی کارت او کلیک کنید.</div></div></div>
+<div class="dashboard-members" id="dashboardMembers"></div>
+</div>
+<div class="panel dashboard-alltasks-panel">
+  <div class="toolbar">
+    <div><h2 style="margin-bottom:4px">تمام تسک‌ها</h2><div class="hint">نمای کامل تسک‌های تیم در صفحه اصلی داشبورد</div></div>
+    <button class="primary" data-open-task>+ تسک جدید</button>
+  </div>
+  <div class="legend-time">
+      <span><i style="background:#d84b4b"></i> مهلت تمام‌شده</span>
+      <span><i style="background:#e79b20"></i> نزدیک مهلت</span>
+      <span><i style="background:#d2a514"></i> در حال انجام</span>
+      <span><i style="background:#31a76a"></i> انجام‌شده / زمان کافی</span>
+      <span>مبنای رنگ: نسبت زمان سپری‌شده از شروع تا پایان</span>
+    </div>
+    <div class="table-wrap" style="margin-top:8px"><table id="dashboardAllTasksTable"></table></div>
+</div>
+<div class="panel">
+  <div class="toolbar">
+    <div><h2 style="margin-bottom:4px">آخرین تغییرات تیم</h2><div class="hint">ایجاد، شروع، تغییر وضعیت، ویرایش و پایان تسک‌ها</div></div>
+    <span class="sync-pill"><i class="sync-dot"></i> همگام‌سازی آنلاین</span>
+  </div>
+  <div class="live-feed" id="liveFeed"></div>
+</div>
+</section>
+
+<section class="page" id="page-today">
+<div class="panel"><div class="toolbar"><div><h2>تسک‌های امروز</h2><div class="hint">برای هر تسک تاریخ پایان و ساعت پایان مستقل ثبت می‌شود.</div></div><button class="primary" data-open-task>+ تسک جدید</button></div><div class="table-wrap"><table id="todayTable"></table></div></div>
+</section>
+
+<section class="page" id="page-all">
+<div class="panel">
+<div class="toolbar"><div><h2>همه تسک‌ها</h2><div class="hint">هر تسک جدید بلافاصله در این لیست نمایش داده می‌شود.</div></div><button class="primary" data-open-task>+ تسک جدید</button></div>
+<div class="filters">
+<input id="search" placeholder="جستجو در عنوان، اقدام، برچسب یا یادداشت...">
+<select id="personFilter"><option value="">همه افراد</option></select>
+<select id="workTypeFilter"><option value="">همه نوع‌های کار</option></select>
+<select id="statusFilter"><option value="">همه وضعیت‌ها</option><option value="todo">شروع نشده</option><option value="doing">در حال انجام</option><option value="done">انجام شده</option><option value="blocked">متوقف</option></select>
+<select id="priorityFilter"><option value="">همه اولویت‌ها</option><option value="high">بالا</option><option value="medium">متوسط</option><option value="low">پایین</option></select>
+<select id="sortFilter"><option value="newest">جدیدترین</option><option value="due">نزدیک‌ترین مهلت</option><option value="priority">اولویت</option><option value="person">نام فرد</option></select>
+</div>
+<div class="table-wrap"><table id="allTable"></table></div>
+</div>
+</section>
+
+<section class="page" id="page-members"><div class="panel"><div class="toolbar"><h2>اعضای تیم</h2><button class="primary admin-control" data-open-member>+ عضو جدید</button></div><div class="members" id="memberCards"></div></div></section>
+
+<section class="page" id="page-worktypes">
+  <div class="panel">
+    <div class="toolbar">
+      <div>
+        <h2>مدیریت نوع کار</h2>
+        <div class="hint">این دسته‌ها در فرم تسک و فیلترهای گزارش استفاده می‌شوند.</div>
+      </div>
+      <button class="primary admin-control" id="addWorkTypeBtn">+ نوع کار جدید</button>
+    </div>
+    <div class="members" id="workTypeCards"></div>
+  </div>
+</section>
+
+<section class="page" id="page-calendar"><div class="panel"><div class="toolbar"><h2>تقویم مهلت تسک‌ها</h2><span class="hint">۲۸ روز آینده</span></div><div class="calendar-grid" id="calendarGrid"></div></div></section>
+<section class="page" id="page-reports"><div class="panel"><div class="executive-report-head"><div><h2>گزارش مدیریتی تیم</h2><p>نمای سریع برنامه کاری افراد؛ برای دیدن تمام تسک‌های هر فرد روی کارت او کلیک کنید.</p></div><div class="manager-report-actions"><button class="primary" id="exportManagerImageBtnReports">خروجی عکس گزارش مدیر</button></div></div><div class="executive-summary" id="reportKpis"></div><div class="executive-legend"><strong>راهنمای رنگ:</strong><span><i style="background:#31a76a"></i> انجام‌شده</span><span><i style="background:#d2a514"></i> در حال انجام و دارای مهلت</span><span><i style="background:#e79b20"></i> نزدیک مهلت</span><span><i style="background:#d84b4b"></i> مهلت گذشته و انجام‌نشده</span><span><i style="background:#2f80ed"></i> هنوز مهلت دارد</span></div><div class="executive-member-grid" id="reportRows"></div></div></section>
+<section class="page" id="page-activity"><div class="panel"><div class="toolbar"><h2>تاریخچه</h2><button class="danger admin-control" id="clearActivityBtn">پاک کردن تاریخچه</button></div><div class="timeline" id="activityTimeline"></div></div></section>
+<section class="page" id="page-backup"><div class="panel"><h2>پشتیبان‌گیری</h2><p style="font-size:12px;color:#52627a;line-height:1.9">برای انتقال اطلاعات قدیمی، فقط ادمین باید فایل team-backup(8).json را در قسمت «انتقال اولیه بکاپ» انتخاب کند. اطلاعات بکاپ داخل کد عمومی سایت قرار نگرفته است.</p><div class="actions"><button class="primary" id="exportJsonBtn">دانلود JSON</button><button class="ghost" id="exportCsvBtn">دانلود CSV</button><label class="admin-control" style="font-size:12px;font-weight:800">انتقال اولیه بکاپ JSON به Supabase: <input type="file" id="importJsonInput" accept=".json,application/json"></label></div><div style="margin-top:18px"><button class="danger admin-control" id="clearAllBtn">حذف همه داده‌ها</button></div></div></section>
+</main>
+</div>
+
+
+<div class="modal" id="memberPlanModal"><div class="modal-card member-workspace">
+<div class="member-workspace-head">
+  <div class="member-workspace-avatar" id="planAvatar"></div>
+  <div>
+    <div class="member-workspace-name" id="planMemberName"></div>
+    <div class="member-workspace-role" id="planMemberRole"></div>
+  </div>
+  <div style="display:flex;gap:7px;align-items:center">
+    <button class="primary admin-control" id="memberPanelNewTaskBtn">+ تسک برای این فرد</button>
+    <button class="ghost" data-close="memberPlanModal">بستن</button>
+  </div>
+</div>
+
+<div class="member-workspace-kpis" id="planKpis"></div>
+
+<div class="member-workspace-tabs">
+  <button class="active" data-member-task-tab="today">برنامه امروز</button>
+  <button data-member-task-tab="open">کارهای باز</button>
+  <button data-member-task-tab="doing">درحال انجام</button>
+  <button data-member-task-tab="late">عقب‌افتاده</button>
+  <button data-member-task-tab="done">انجام‌شده</button>
+  <button data-member-task-tab="all">همه تسک‌ها</button>
+</div>
+
+<div class="manager-detail-legend"><span><i style="background:#31a76a"></i> انجام‌شده</span><span><i style="background:#d2a514"></i> در حال انجام</span><span><i style="background:#e79b20"></i> نزدیک مهلت</span><span><i style="background:#d84b4b"></i> عقب‌افتاده</span><span><i style="background:#2f80ed"></i> هنوز مهلت دارد</span></div><div class="member-task-grid" id="memberPanelTaskList"></div>
+</div></div>
+
+<div class="modal" id="taskModal"><div class="modal-card">
+<h2 id="taskModalTitle" style="margin-top:0">تسک جدید</h2>
+<div class="modal-grid">
+<div><label>فرد مسئول</label><select id="tPerson"></select></div>
+<div><label>نوع کار</label><div style="display:flex;gap:6px"><select id="tWorkType"></select><button type="button" class="smallbtn" id="quickWorkTypeBtn">+ نوع</button></div></div>
+<div class="full"><label>عنوان تسک</label><input id="tTitle"></div>
+<div class="full"><label>شرح / اقدام</label><textarea id="tAction" rows="3"></textarea></div>
+<div><label>تاریخ شروع</label><input id="tStart" type="text" placeholder="۱۴۰۵/۰۷/۱۵" inputmode="numeric"></div>
+<div><label>ساعت شروع</label><input id="tStartTime" type="time" step="60"><div class="sub">برای تسک‌های ساعتی همان روز الزامی است.</div></div>
+<div><label>نوع مهلت انجام</label>
+<select id="tDeadlineType" class="deadline-type">
+<option value="date">تاریخ مشخص</option>
+<option value="routine">روتین</option>
+<option value="unknown">نامشخص</option>
+</select></div>
+<div id="dueDateWrap"><label>تاریخ پایان</label><input id="tDue" type="text" placeholder="۱۴۰۵/۰۷/۱۵" inputmode="numeric"></div>
+<div id="dueTimeWrap"><label>ساعت پایان</label><input id="tDueTime" type="time" step="60"></div>
+<div><label>اولویت</label><select id="tPriority"><option value="high">بالا</option><option value="medium" selected>متوسط</option><option value="low">پایین</option></select></div>
+<div><label>وضعیت</label><select id="tStatus"><option value="todo">شروع نشده</option><option value="doing">در حال انجام</option><option value="done">انجام شده</option><option value="blocked">متوقف</option></select></div>
+<div><label>برچسب</label><input id="tTag"></div>
+<div class="full reminder-box">
+<div class="reminder-title">یادآور / آلارم تسک</div>
+<label style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><input id="tReminderEnabled" type="checkbox" style="width:auto"> برای این تسک یادآور فعال شود</label>
+<div id="reminderFields" class="modal-grid" style="display:none">
+<div><label>تاریخ یادآوری</label><input id="tReminderDate" type="text" placeholder="۱۴۰۵/۰۷/۱۵" inputmode="numeric"></div>
+<div><label>ساعت یادآوری</label><input id="tReminderTime" type="time" step="60"></div>
+<div><label>تکرار</label><select id="tReminderRepeat"><option value="once">فقط یک‌بار</option><option value="daily">روزانه</option><option value="workdays">روزهای کاری</option><option value="weekly">هفتگی</option></select></div>
+<div style="display:flex;align-items:end"><button type="button" class="ghost" id="notificationPermissionBtn">فعال‌کردن اعلان مرورگر</button></div>
+</div>
+</div>
+<div class="full"><label>یادداشت مدیریتی</label><textarea id="tNote" rows="2"></textarea></div>
+</div>
+<div class="modal-actions"><button class="primary" id="saveTaskBtn">ذخیره</button><button class="ghost" data-close="taskModal">انصراف</button></div>
+</div></div>
+
+<div class="modal" id="memberModal"><div class="modal-card" style="width:min(650px,100%)">
+<h2 id="memberModalTitle" style="margin-top:0">عضو جدید</h2>
+<div class="modal-grid">
+<div class="full"><label>عکس عضو</label><div id="memberPhotoPreview" class="photo-preview">ع</div>
+<div class="photo-actions"><input id="mPhoto" type="file" accept="image/*"><button type="button" class="smallbtn action-delete" id="removeMemberPhotoBtn">حذف عکس</button></div>
+<div class="sub">تصویر به‌صورت خودکار برای پروفایل کوچک و داخل اطلاعات برنامه ذخیره می‌شود.</div></div>
+<div><label>نام</label><input id="mName"></div><div><label>سمت / نقش</label><input id="mRole"></div>
+<div><label>وضعیت</label><select id="mStatus"><option value="active">فعال</option><option value="inactive">غیرفعال</option></select></div>
+<div><label>توضیح</label><input id="mNote"></div>
+</div>
+<div class="modal-actions"><button class="primary" id="saveMemberBtn">ذخیره</button><button class="ghost" data-close="memberModal">انصراف</button></div>
+</div></div>
+
+
+<div class="modal" id="workTypeModal"><div class="modal-card" style="width:min(500px,100%)">
+<h2 id="workTypeModalTitle" style="margin-top:0">نوع کار جدید</h2>
+<div><label>عنوان نوع کار</label><input id="wtName" placeholder="مثلاً پیگیری"></div>
+<div class="modal-actions"><button class="primary" id="saveWorkTypeBtn">ذخیره</button><button class="ghost" data-close="workTypeModal">انصراف</button></div>
+</div></div>
+
+<div class="modal" id="deleteConfirmModal"><div class="modal-card" style="width:min(460px,100%)">
+<h2 style="margin-top:0;color:#b92d2d">تأیید حذف</h2><p id="deleteConfirmText" style="line-height:1.9;font-size:13px"></p>
+<div class="modal-actions"><button class="danger" id="confirmDeleteBtn">بله، حذف شود</button><button class="ghost" id="cancelDeleteBtn">انصراف</button></div>
+</div></div>
+
+
+<div class="modal" id="avatarModal"><div class="modal-card" style="width:min(520px,100%)">
+<h2 style="margin-top:0">تغییر عکس پروفایل</h2>
+<p style="color:#718096;font-size:12px;line-height:1.9;margin-top:-4px">یک تصویر JPG، PNG یا WebP تا حداکثر ۵ مگابایت انتخاب کنید.</p>
+<div style="display:grid;gap:12px">
+<div id="selfAvatarPreview" class="photo-preview">ع</div>
+<div><label>انتخاب تصویر</label><input id="selfAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+<div id="avatarMessage" style="display:none;border-radius:10px;padding:10px;font-size:12px;line-height:1.8"></div>
+</div>
+<div class="modal-actions"><button class="primary" id="saveAvatarBtn">ذخیره عکس</button><button class="ghost" data-close="avatarModal">انصراف</button></div>
+</div></div>
+
+<div class="modal" id="changePasswordModal"><div class="modal-card" style="width:min(520px,100%)">
+<h2 style="margin-top:0">تغییر رمز عبور</h2>
+<p style="color:#718096;font-size:12px;line-height:1.9;margin-top:-4px">برای امنیت بیشتر، ابتدا رمز فعلی خود را وارد کنید. رمز جدید حداقل ۸ کاراکتر باشد.</p>
+<div style="display:grid;gap:12px">
+<div><label>رمز فعلی</label><input id="cpCurrent" type="password" autocomplete="current-password" placeholder="رمز فعلی"></div>
+<div><label>رمز جدید</label><input id="cpNew" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر"></div>
+<div><label>تکرار رمز جدید</label><input id="cpConfirm" type="password" autocomplete="new-password" placeholder="رمز جدید را دوباره وارد کنید"></div>
+<div id="cpMessage" style="display:none;border-radius:10px;padding:10px;font-size:12px;line-height:1.8"></div>
+</div>
+<div class="modal-actions"><button class="primary" id="savePasswordBtn">ذخیره رمز جدید</button><button class="ghost" data-close="changePasswordModal">انصراف</button></div>
+</div></div>
+
+<div class="alarm-banner" id="alarmBanner">
+<h3>⏰ یادآور تسک</h3>
+<p id="alarmText"></p>
+<div class="actions"><button class="primary" id="alarmDoneBtn">انجام شد</button><button class="ghost" id="alarmDismissBtn">بستن</button></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+'use strict';
+// V28: team visibility + own-task editing + private user scope + self-service avatar
+const KEY='team_manager_dashboard_alltasks_v24_cache', ACT='team_manager_dashboard_alltasks_activity_v24';
+const SUPABASE_URL='https://tubcvprrceyjzhaxmvhy.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_eOyoTZAYcQNMc4sgncR3Mg_CeqqAav1';
+const INTERNAL_EMAIL_DOMAIN='teamtask.app';
+const MIGRATION_BACKUP={data:{members:[],workTypes:[],tasks:[]},activity:[]};
+const sampleMembers=MIGRATION_BACKUP.data.members;
+const sampleWorkTypes=MIGRATION_BACKUP.data.workTypes;
+const sampleTasks=MIGRATION_BACKUP.data.tasks;
+let data={members:[],workTypes:[],tasks:[]};
+let activity=JSON.parse(localStorage.getItem(ACT)||'null')||structuredClone(MIGRATION_BACKUP.activity||[]);
+let currentUser=null,currentProfile=null,isAdmin=false,realtimeChannel=null,onlineReady=false,syncBusy=false;
+let sessionKeepAliveTimer=null,dataAutoRefreshTimer=null,realtimeWatchdogTimer=null,lastOnlineRefreshAt=0;
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+let editTaskId=null,editMemberId=null,editWorkTypeId=null,pendingDelete=null,tempMemberPhoto='';
+const $=id=>document.getElementById(id);
+const statusLabel={todo:'شروع نشده',doing:'در حال انجام',done:'انجام شده',blocked:'متوقف'};
+const priorityLabel={high:'بالا',medium:'متوسط',low:'پایین'};
+const pageTitles={dashboard:'داشبورد',today:'تسک‌های امروز',all:'همه تسک‌ها',members:'اعضای تیم',worktypes:'نوع کار',calendar:'تقویم',reports:'گزارش‌ها',activity:'تاریخچه',backup:'پشتیبان‌گیری'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function showSync(on,text='در حال ذخیره آنلاین...'){const e=$('syncOverlay');if(!e)return;e.textContent=text;e.style.display=on?'block':'none'}
+function roleFa(role){if(role==='admin')return 'ادمین کامل';if(currentProfile?.visibility_scope==='private')return 'دسترسی خصوصی - فقط تسک‌های خود';return ({manager:'مدیر تیم',supervisor:'سرپرست تیم',member:'عضو تیم'})[role]||'کاربر'}
+function normalizeUsername(v){return String(v||'').trim().toLowerCase().replace(/\s+/g,'')}
+function normalizeWorkName(v){return String(v||'').replace(/\s+/g,'').replace(/های/g,'').replace(/ها/g,'').replace(/‌/g,'').trim()}
+function time5(v){return v?String(v).slice(0,5):''}
+function uuidLocalId(uuid){const h=String(uuid||'').replace(/-/g,'').slice(0,12);return -(parseInt(h||'1',16)%900000000+100000000)}
+function profileLocalId(p){return p?.legacy_member_id!=null?Number(p.legacy_member_id):uuidLocalId(p?.id)}
+function profileToMember(p){return {id:profileLocalId(p),name:p.full_name,role:p.job_title||'',status:p.is_active?'active':'inactive',note:'',photo:p.avatar_url||'',uuid:p.id,visibilityScope:p.visibility_scope||'team'}}
+function taskRowToLocal(t,profileByUuid,workByDbId){const ap=profileByUuid.get(t.assigned_to);return {id:Number(t.legacy_id??t.id),dbId:t.id,assignedUuid:t.assigned_to||null,personId:ap?profileLocalId(ap):null,workTypeId:workByDbId.get(t.work_type_id)?.legacy_id!=null?Number(workByDbId.get(t.work_type_id).legacy_id):null,title:t.title||'',action:t.action_text||'',start:t.start_date||'',startTime:time5(t.start_time),due:t.due_date||'',dueTime:time5(t.due_time),priority:t.priority||'medium',status:t.status||'todo',tag:t.tag||'',note:t.note||'',deadlineType:t.deadline_type||(t.due_date?'date':'unknown'),reminderEnabled:!!t.reminder_enabled,reminderDate:t.reminder_date||'',reminderTime:time5(t.reminder_time),reminderRepeat:t.reminder_repeat||'once',lastReminderKey:t.last_reminder_key||'',updatedAt:t.updated_at||'',completedAt:t.completed_at||''}}
+function localTaskToRow(t,memberUuidByLocalId,workDbByLegacy){return {legacy_id:t.id,assigned_to:t.assignedUuid||(t.personId!=null?(memberUuidByLocalId.get(Number(t.personId))||null):null),work_type_id:t.workTypeId!=null?(workDbByLegacy.get(Number(t.workTypeId))||null):null,title:t.title,action_text:t.action||null,tag:t.tag||null,note:t.note||null,status:t.status,priority:t.priority,deadline_type:t.deadlineType||(t.due?'date':'unknown'),start_date:t.start||null,start_time:t.startTime||null,due_date:t.due||null,due_time:t.dueTime||null,reminder_enabled:!!t.reminderEnabled,reminder_date:t.reminderDate||null,reminder_time:t.reminderTime||null,reminder_repeat:t.reminderRepeat||'once',last_reminder_key:t.lastReminderKey||null,completed_at:t.completedAt||null,created_by:currentUser?.id||null}}
+function currentMember(){return data.members.find(m=>m.uuid===currentUser?.id)||null}
+function canEditTask(t){return !!t&&(isAdmin||t.assignedUuid===currentUser?.id||currentMember()?.id===t.personId)}
+function canDeleteTask(){return isAdmin}
+async function fetchCurrentProfile(){const {data:p,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();if(error)throw error;currentProfile=p;isAdmin=p.role==='admin'}
+async function loadOnlineData(showToast=false){
+ const [pr,wr,tr]=await Promise.all([sb.from('profiles').select('*').order('full_name'),sb.from('work_types').select('*').order('id'),sb.from('tasks').select('*').order('id')]);
+ if(pr.error)throw pr.error;if(wr.error)throw wr.error;if(tr.error)throw tr.error;
+ const profiles=pr.data||[],works=wr.data||[],tasks=tr.data||[];
+ const profileByUuid=new Map(profiles.map(p=>[p.id,p]));const workByDbId=new Map(works.map(w=>[w.id,w]));
+ data.members=profiles.map(profileToMember);
+ data.workTypes=works.filter(w=>w.is_active!==false).map(w=>({id:Number(w.legacy_id??w.id),dbId:w.id,name:w.name}));
+ data.tasks=tasks.map(t=>taskRowToLocal(t,profileByUuid,workByDbId));
+ localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ACT,JSON.stringify(activity));
+ renderAll();applyPermissions();if(showToast)toast('اطلاعات آنلاین به‌روز شد.');
+}
+async function migrateBackupPayload(backup){
+ if(!isAdmin)throw new Error('فقط مدیر سامانه می‌تواند بکاپ را وارد کند.');
+ const {count,error:countErr}=await sb.from('tasks').select('*',{count:'exact',head:true});if(countErr)throw countErr;
+ if((count||0)>0)throw new Error('در دیتابیس تسک وجود دارد؛ برای جلوگیری از تداخل، انتقال اولیه متوقف شد.');
+ showSync(true,'در حال انتقال اطلاعات بکاپ به فضای آنلاین...');
+ try{
+ const {data:profiles,error:pe}=await sb.from('profiles').select('*');if(pe)throw pe;
+ const pByName=new Map((profiles||[]).map(p=>[String(p.full_name).trim(),p]));
+ for(const m of backup.data.members||[]){const p=pByName.get(String(m.name).trim());if(!p)throw new Error('حساب کاربری «'+m.name+'» در Supabase پیدا نشد.');const {error}=await sb.from('profiles').update({legacy_member_id:m.id,job_title:m.role||p.job_title,avatar_url:m.photo||p.avatar_url,is_active:m.status!=='inactive'}).eq('id',p.id);if(error)throw error;}
+ const {data:existingWorks,error:we}=await sb.from('work_types').select('*');if(we)throw we;
+ for(const w of backup.data.workTypes||[]){let found=(existingWorks||[]).find(x=>normalizeWorkName(x.name)===normalizeWorkName(w.name));if(found){const {error}=await sb.from('work_types').update({legacy_id:w.id,name:w.name,is_active:true}).eq('id',found.id);if(error)throw error;found={...found,legacy_id:w.id,name:w.name};}else{const {data:ins,error}=await sb.from('work_types').insert({legacy_id:w.id,name:w.name,is_active:true}).select().single();if(error)throw error;(existingWorks||[]).push(ins);}}
+ const {data:profiles2,error:p2e}=await sb.from('profiles').select('*');if(p2e)throw p2e;const memberUuidByLegacy=new Map((profiles2||[]).filter(p=>p.legacy_member_id!=null).map(p=>[Number(p.legacy_member_id),p.id]));
+ const {data:works2,error:w2e}=await sb.from('work_types').select('*');if(w2e)throw w2e;const workDbByLegacy=new Map((works2||[]).filter(w=>w.legacy_id!=null).map(w=>[Number(w.legacy_id),w.id]));
+ const rows=(backup.data.tasks||[]).map(t=>localTaskToRow(t,memberUuidByLegacy,workDbByLegacy));if(rows.length){const {error}=await sb.from('tasks').upsert(rows,{onConflict:'legacy_id'});if(error)throw error;}
+ activity=structuredClone(backup.activity||[]);localStorage.setItem(ACT,JSON.stringify(activity));toast('اطلاعات فعلی با موفقیت به فضای آنلاین منتقل شد.');
+ }finally{showSync(false)}
+}
+async function syncAllToSupabase(){
+ if(!isAdmin||!onlineReady)return;
+ if(syncBusy)return;syncBusy=true;showSync(true);
+ try{
+  const [pr,wr,tr]=await Promise.all([sb.from('profiles').select('*'),sb.from('work_types').select('*'),sb.from('tasks').select('id,legacy_id')]);if(pr.error)throw pr.error;if(wr.error)throw wr.error;if(tr.error)throw tr.error;
+  const memberUuidByLegacy=new Map(data.members.map(m=>[Number(m.id),m.uuid]));
+  for(const m of data.members){const uuid=m.uuid||memberUuidByLegacy.get(Number(m.id));if(uuid){const {error}=await sb.from('profiles').update({full_name:m.name,job_title:m.role||null,avatar_url:m.photo||null,is_active:m.status!=='inactive'}).eq('id',uuid);if(error)throw error;}}
+  let works=wr.data||[];for(const w of data.workTypes){let db=works.find(x=>Number(x.legacy_id)===Number(w.id));if(db){const {error}=await sb.from('work_types').update({name:w.name,is_active:true}).eq('id',db.id);if(error)throw error;}else{const {data:ins,error}=await sb.from('work_types').insert({legacy_id:w.id,name:w.name,is_active:true}).select().single();if(error)throw error;works.push(ins);}}
+  const localWorkIds=new Set(data.workTypes.map(w=>Number(w.id)));for(const w of works){if(w.legacy_id!=null&&!localWorkIds.has(Number(w.legacy_id))){const {error}=await sb.from('work_types').delete().eq('id',w.id);if(error)throw error;}}
+  const workDbByLegacy=new Map(works.filter(w=>w.legacy_id!=null&&localWorkIds.has(Number(w.legacy_id))).map(w=>[Number(w.legacy_id),w.id]));
+  const rows=data.tasks.map(t=>localTaskToRow(t,memberUuidByLegacy,workDbByLegacy));if(rows.length){const {error}=await sb.from('tasks').upsert(rows,{onConflict:'legacy_id'});if(error)throw error;}
+  const localTaskIds=new Set(data.tasks.map(t=>Number(t.id)));for(const t of tr.data||[]){if(t.legacy_id!=null&&!localTaskIds.has(Number(t.legacy_id))){const {error}=await sb.from('tasks').delete().eq('id',t.id);if(error)throw error;}}
+  localStorage.setItem(ACT,JSON.stringify(activity));await loadOnlineData(false);
+ }finally{syncBusy=false;showSync(false)}
+}
+function applyPermissions(){
+ document.querySelectorAll('.admin-control').forEach(el=>el.classList.toggle('admin-only-hidden',!isAdmin));
+ $('accessRoleText').textContent=roleFa(currentProfile?.role);$('currentUserChip').textContent=(currentProfile?.full_name||'کاربر')+' • '+roleFa(currentProfile?.role);
+ document.querySelectorAll('[data-action="status"],[data-action="toggle"]').forEach(el=>{const t=data.tasks.find(x=>x.id===Number(el.dataset.id));el.disabled=!canEditTask(t)});
+}
+async function startRealtime(){
+ if(realtimeChannel)await sb.removeChannel(realtimeChannel);
+ realtimeChannel=sb.channel('team-tasks-live')
+  .on('postgres_changes',{event:'*',schema:'public',table:'tasks'},async()=>{
+    if(!syncBusy){try{await loadOnlineData(false);lastOnlineRefreshAt=Date.now();toast('تغییر جدید آنلاین دریافت شد.')}catch(e){console.error(e)}}
+  })
+  .subscribe(status=>{
+    if(status==='CHANNEL_ERROR'||status==='TIMED_OUT')console.warn('Realtime connection:',status);
+  });
+}
+async function keepSessionAlive(){
+ try{
+  const {data:{session},error}=await sb.auth.getSession();
+  if(error)throw error;
+  if(!session)return;
+  currentUser=session.user;
+  const expiresAtMs=(session.expires_at||0)*1000;
+  if(expiresAtMs && expiresAtMs-Date.now()<10*60*1000){
+    const {data,error:refreshError}=await sb.auth.refreshSession();
+    if(refreshError)throw refreshError;
+    if(data?.session)currentUser=data.session.user;
+  }
+ }catch(e){console.warn('Session keep-alive failed:',e)}
+}
+async function autoRefreshOnlineData(){
+ if(!onlineReady||syncBusy||document.hidden||!navigator.onLine)return;
+ try{await keepSessionAlive();await loadOnlineData(false);lastOnlineRefreshAt=Date.now();}
+ catch(e){console.warn('Auto refresh failed:',e)}
+}
+function startOnlineKeepAlive(){
+ clearInterval(sessionKeepAliveTimer);clearInterval(dataAutoRefreshTimer);clearInterval(realtimeWatchdogTimer);
+ sessionKeepAliveTimer=setInterval(keepSessionAlive,4*60*1000);
+ dataAutoRefreshTimer=setInterval(autoRefreshOnlineData,60*1000);
+ realtimeWatchdogTimer=setInterval(async()=>{
+   if(!onlineReady||document.hidden||!navigator.onLine)return;
+   try{
+     const state=realtimeChannel?.state;
+     if(!realtimeChannel||state==='closed'||state==='errored')await startRealtime();
+   }catch(e){console.warn('Realtime reconnect failed:',e)}
+ },2*60*1000);
+}
+async function refreshAfterReturn(){
+ if(!onlineReady||document.hidden||!navigator.onLine)return;
+ await autoRefreshOnlineData();
+ try{await startRealtime();}catch(e){console.warn(e)}
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshAfterReturn()});
+window.addEventListener('online',refreshAfterReturn);
+async function finishLogin(session){currentUser=session.user;await fetchCurrentProfile();await loadOnlineData(false);lastOnlineRefreshAt=Date.now();onlineReady=true;document.body.classList.remove('auth-locked');$('authGate').style.display='none';applyPermissions();await startRealtime();startOnlineKeepAlive();setPage('dashboard')}
+async function doLogin(){const u=normalizeUsername($('loginUsername').value),pw=$('loginPassword').value;if(!u||!pw){$('authError').textContent='نام کاربری و رمز عبور را وارد کنید.';$('authError').style.display='block';return}$('authError').style.display='none';$('authLoading').style.display='block';$('loginBtn').disabled=true;try{const {data:auth,error}=await sb.auth.signInWithPassword({email:u+'@'+INTERNAL_EMAIL_DOMAIN,password:pw});if(error)throw error;await finishLogin(auth.session)}catch(e){console.error(e);$('authError').textContent='خطای ورود: '+(e?.message||String(e));$('authError').style.display='block'}finally{$('authLoading').style.display='none';$('loginBtn').disabled=false}}
+async function bootAuth(){try{const {data:{session}}=await sb.auth.getSession();if(session)await finishLogin(session);else{$('authGate').style.display='flex';document.body.classList.add('auth-locked')}}catch(e){console.error(e);$('authError').textContent='خطای اتصال: '+(e?.message||String(e));$('authError').style.display='block'}}
+
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function pad2(n){return String(n).padStart(2,'0')}function div(a,b){return ~~(a/b)}function mod(a,b){return a-~~(a/b)*b}
+function g2j(gy,gm,gd){let g=[0,31,59,90,120,151,181,212,243,273,304,334],gy2=gm>2?gy+1:gy,days=355666+365*gy+div(gy2+3,4)-div(gy2+99,100)+div(gy2+399,400)+gd+g[gm-1],jy=-1595+33*div(days,12053);days%=12053;jy+=4*div(days,1461);days%=1461;if(days>365){jy+=div(days-1,365);days=(days-1)%365}let jm=days<186?1+div(days,31):7+div(days-186,30),jd=1+(days<186?days%31:(days-186)%30);return [jy,jm,jd]}
+function j2g(jy,jm,jd){jy+=1595;let days=-355668+365*jy+div(jy,33)*8+div(mod(jy,33)+3,4)+jd+(jm<7?(jm-1)*31:(jm-7)*30+186),gy=400*div(days,146097);days%=146097;if(days>36524){gy+=100*div(--days,36524);days%=36524;if(days>=365)days++}gy+=4*div(days,1461);days%=1461;if(days>365){gy+=div(days-1,365);days=(days-1)%365}let gd=days+1,s=[0,31,((gy%4===0&&gy%100!==0)||gy%400===0)?29:28,31,30,31,30,31,31,30,31,30,31],gm;for(gm=1;gm<=12&&gd>s[gm];gm++)gd-=s[gm];return [gy,gm,gd]}
+function isoToJ(iso){if(!iso)return '';const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return iso;const [jy,jm,jd]=g2j(+m[1],+m[2],+m[3]);return `${jy}/${pad2(jm)}/${pad2(jd)}`}
+
+const jalaliMonthNames=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+function faDigits(v){return String(v??'').replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d])}
+function jalaliWords(iso,withYear=false){
+ if(!iso)return '';
+ const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+ if(!m)return iso;
+ const [jy,jm,jd]=g2j(+m[1],+m[2],+m[3]);
+ return `${faDigits(jd)} ${jalaliMonthNames[jm-1]}${withYear?' '+faDigits(jy):''}`;
+}
+
+function jToISO(v){const s=String(v||'').trim().replace(/-/g,'/').replace(/\./g,'/'),m=s.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);if(!m)return '';const jy=+m[1],jm=+m[2],jd=+m[3];if(jm<1||jm>12||jd<1||jd>31||(jm>6&&jm<12&&jd>30)||(jm===12&&jd>30))return '';const [gy,gm,gd]=j2g(jy,jm,jd);return `${gy}-${pad2(gm)}-${pad2(gd)}`}
+function todayJ(){return isoToJ(todayISO())}
+function memberName(id){return data.members.find(x=>x.id===id)?.name||'بدون مسئول'}
+function avatarHtml(m){const initial=esc((m?.name||'؟').trim().charAt(0)||'؟');return m?.photo?`<img src="${m.photo}" alt="${esc(m.name||'عضو')}">`:initial}
+function renderPhotoPreview(name=''){const p=$('memberPhotoPreview');if(!p)return;if(tempMemberPhoto)p.innerHTML=`<img src="${tempMemberPhoto}" alt="پیش‌نمایش">`;else p.textContent=(name||$('mName')?.value||'ع').trim().charAt(0)||'ع'}
+function workTypeName(id){return data.workTypes.find(x=>x.id===id)?.name||'بدون دسته‌بندی'}
+function deadlineMs(t){if((t.deadlineType||'date')!=='date'||!t.due)return null;const tm=/^\d{2}:\d{2}$/.test(t.dueTime||'')?t.dueTime:'23:59';const [y,m,d]=t.due.split('-').map(Number),[hh,mm]=tm.split(':').map(Number);return new Date(y,m-1,d,hh,mm,59,999).getTime()}
+
+function startMs(t){
+ if(!t.start)return null;
+ const tm=/^\d{2}:\d{2}$/.test(t.startTime||'')?t.startTime:'00:00';
+ const [y,m,d]=t.start.split('-').map(Number),[hh,mm]=tm.split(':').map(Number);
+ return new Date(y,m-1,d,hh,mm,0,0).getTime();
+}
+function taskTimeState(t,now=Date.now()){
+ // Status colors take priority in the task list:
+ // done = green, overdue = red, doing before deadline = yellow.
+ if(t.status==='done')return {key:'green',label:'انجام‌شده',ratio:null};
+
+ const e=deadlineMs(t);
+ if(e!==null && now>e)return {key:'red',label:'مهلت تمام شده',ratio:1};
+
+ if(t.status==='doing'){
+   return {key:'yellow',label:'در حال انجام',ratio:null};
+ }
+
+ // Routine/unknown tasks without a deadline remain neutral unless their status changes.
+ if((t.deadlineType||'date')!=='date'||!t.due){
+   return {key:'neutral',label:(t.deadlineType==='routine'?'روتین':'بدون مهلت'),ratio:null};
+ }
+
+ // Not-started dated tasks keep the previous time-based urgency behavior.
+ const s=startMs(t);
+ if(!e)return {key:'neutral',label:'بدون مهلت',ratio:null};
+ if(!s||e<=s)return {key:'green',label:'زمان کافی',ratio:0};
+ const ratio=Math.max(0,Math.min(1,(now-s)/(e-s)));
+ if(ratio>=.70)return {key:'orange',label:'نزدیک مهلت',ratio};
+ return {key:'green',label:'زمان کافی',ratio};
+}
+function timeStateHtml(t){const s=taskTimeState(t);return `<div class="time-state ${s.key}">${esc(s.label)}</div>`}
+
+function taskColorRank(t){
+ const s=taskTimeState(t);
+ // Red first, orange second, neutral/yellow-like items next, green last.
+ return s.key==='red'?0:s.key==='orange'?1:s.key==='yellow'?2:s.key==='neutral'?3:4;
+}
+function taskColorSort(a,b){
+ const r=taskColorRank(a)-taskColorRank(b);
+ if(r!==0)return r;
+ // Within the same color, earlier deadlines come first.
+ const ad=(a.deadlineType||'date')==='date'?((a.due||'9999')+' '+(a.dueTime||'23:59')):((a.deadlineType==='routine')?'9998':'9999');
+ const bd=(b.deadlineType||'date')==='date'?((b.due||'9999')+' '+(b.dueTime||'23:59')):((b.deadlineType==='routine')?'9998':'9999');
+ return ad.localeCompare(bd);
+}
+
+function isTaskForToday(t){
+ if(t.status==='done')return false;
+ const today=todayISO();
+ if((t.deadlineType||'date')==='routine')return !t.start||t.start<=today;
+ if((t.deadlineType||'date')==='unknown')return !t.start||t.start<=today;
+ if(!t.start)return t.due===today||isLate(t);
+ return t.start<=today && (!t.due||t.due>=today||isLate(t));
+}
+
+function isLate(t){if(t.status==='done'||(t.deadlineType||'date')!=='date')return false;const d=deadlineMs(t);return d!==null&&Date.now()>d}
+function deadlineLabel(t){
+ const tp=t.deadlineType||(t.due?'date':'unknown');
+ const start=t.start?`<div class="sub"><b>شروع:</b> ${esc(jalaliWords(t.start))}${t.startTime?'، '+esc(faDigits(t.startTime)):''}</div>`:'';
+ if(tp==='routine')return `${start}<strong>روتین</strong>`;
+ if(tp==='unknown')return `${start}<span class="sub">مهلت: نامشخص</span>`;
+ return `${start}<div><b>پایان:</b> ${t.due?esc(jalaliWords(t.due)):'—'}${t.dueTime?'، '+esc(faDigits(t.dueTime)):''}</div>${isLate(t)?'<div class="sub" style="color:#c53131;font-weight:900">عقب‌افتاده</div>':''}`;
+}
+function reminderLabel(t){
+ if(!t.reminderEnabled)return '';
+ const rep={once:'یک‌بار',daily:'روزانه',workdays:'روزهای کاری',weekly:'هفتگی'}[t.reminderRepeat]||'';
+ return `<div class="reminder-badge">⏰ ${rep}${t.reminderTime?' • '+esc(t.reminderTime):''}</div>`;
+}
+function log(msg,taskId=null,kind='change'){activity.unshift({id:Date.now(),time:new Date().toISOString(),msg,taskId,kind});activity=activity.slice(0,300)}
+function toast(msg){const e=$('toast');e.textContent=msg;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2200)}
+async function saveTaskDirect(t,isEdit=false,msg=''){
+ const memberUuidByLocalId=new Map(data.members.map(m=>[Number(m.id),m.uuid]));
+ const {data:works,error:we}=await sb.from('work_types').select('id,legacy_id');if(we)throw we;
+ const workDbByLegacy=new Map((works||[]).filter(w=>w.legacy_id!=null).map(w=>[Number(w.legacy_id),w.id]));
+ if(!isAdmin){const me=currentMember();if(!me)throw new Error('پروفایل کاربر پیدا نشد.');t.personId=me.id;t.assignedUuid=currentUser.id}
+ const row=localTaskToRow(t,memberUuidByLocalId,workDbByLegacy);
+ if(isEdit){
+   let q=sb.from('tasks').update(row);q=t.dbId?q.eq('id',t.dbId):q.eq('legacy_id',t.id);const {error}=await q;if(error)throw error;
+ }else{
+   const {error}=await sb.from('tasks').insert(row);if(error)throw error;
+ }
+ await loadOnlineData(false);if(msg)toast(msg+' • ذخیره آنلاین شد.');
+}
+async function updateTaskStatusDirect(t){
+ if(!canEditTask(t))throw new Error('فقط تسک‌های خودتان قابل ویرایش است.');
+ let q=sb.from('tasks').update({status:t.status,completed_at:t.completedAt||null,updated_at:new Date().toISOString()});q=t.dbId?q.eq('id',t.dbId):q.eq('legacy_id',t.id);const {error}=await q;if(error)throw error;await loadOnlineData(false);
+}
+async function save(msg=''){
+ if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');await loadOnlineData(false);return}
+ localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ACT,JSON.stringify(activity));renderAll();applyPermissions();
+ try{await syncAllToSupabase();if(msg)toast(msg+' • ذخیره آنلاین شد.')}catch(e){console.error(e);toast('خطا در ذخیره آنلاین؛ تغییر را دوباره بررسی کنید.');alert('ذخیره آنلاین انجام نشد: '+(e.message||e))}
+}
+function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
+function openAvatarModal(){
+ const p=$('selfAvatarPreview');p.innerHTML=currentProfile?.avatar_url?`<img src="${currentProfile.avatar_url}" alt="پروفایل">`:esc((currentProfile?.full_name||'ع').trim().charAt(0)||'ع');$('selfAvatarFile').value='';$('avatarMessage').style.display='none';openModal('avatarModal');
+}
+async function saveOwnAvatar(){
+ const file=$('selfAvatarFile').files?.[0],m=$('avatarMessage'),btn=$('saveAvatarBtn');
+ const show=(text,ok=false)=>{m.textContent=text;m.style.display='block';m.style.background=ok?'#edf9f2':'#fff0f0';m.style.color=ok?'#187a46':'#b92d2d';m.style.border='1px solid '+(ok?'#bfe8cf':'#f0caca')};
+ if(!file){show('ابتدا یک تصویر انتخاب کنید.');return}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){show('فرمت تصویر باید JPG، PNG یا WebP باشد.');return}if(file.size>5*1024*1024){show('حجم تصویر باید حداکثر ۵ مگابایت باشد.');return}
+ btn.disabled=true;showSync(true,'در حال بارگذاری عکس پروفایل...');
+ try{const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path=`${currentUser.id}/avatar-${Date.now()}.${ext}`;const {error:upErr}=await sb.storage.from('avatars').upload(path,file,{cacheControl:'3600',upsert:false});if(upErr)throw upErr;const {data:pub}=sb.storage.from('avatars').getPublicUrl(path);const url=pub?.publicUrl;if(!url)throw new Error('آدرس تصویر ساخته نشد.');const {error:rpcErr}=await sb.rpc('update_my_avatar',{p_avatar_url:url});if(rpcErr)throw rpcErr;currentProfile.avatar_url=url;await loadOnlineData(false);show('عکس پروفایل با موفقیت تغییر کرد.',true);setTimeout(()=>closeModal('avatarModal'),900)}catch(e){console.error(e);show('ذخیره عکس انجام نشد: '+(e.message||e))}finally{btn.disabled=false;showSync(false)}
+}
+function openChangePassword(){
+ $('cpCurrent').value='';$('cpNew').value='';$('cpConfirm').value='';
+ const m=$('cpMessage');m.style.display='none';m.textContent='';
+ $('savePasswordBtn').disabled=false;openModal('changePasswordModal');setTimeout(()=>$('cpCurrent').focus(),50);
+}
+async function saveNewPassword(){
+ const current=$('cpCurrent').value,newPw=$('cpNew').value,confirmPw=$('cpConfirm').value,m=$('cpMessage'),btn=$('savePasswordBtn');
+ const show=(text,ok=false)=>{m.textContent=text;m.style.display='block';m.style.background=ok?'#edf9f2':'#fff0f0';m.style.color=ok?'#187a46':'#b92d2d';m.style.border='1px solid '+(ok?'#bfe8cf':'#f0caca')};
+ if(!current||!newPw||!confirmPw){show('هر سه فیلد را کامل کنید.');return}
+ if(newPw.length<8){show('رمز جدید باید حداقل ۸ کاراکتر باشد.');return}
+ if(newPw!==confirmPw){show('رمز جدید و تکرار آن یکسان نیستند.');return}
+ if(current===newPw){show('رمز جدید باید با رمز فعلی متفاوت باشد.');return}
+ const username=normalizeUsername(currentProfile?.username||'');
+ if(!username){show('نام کاربری حساب پیدا نشد.');return}
+ btn.disabled=true;btn.textContent='در حال تغییر رمز...';
+ try{
+  const {error:verifyError}=await sb.auth.signInWithPassword({email:username+'@'+INTERNAL_EMAIL_DOMAIN,password:current});
+  if(verifyError){show('رمز فعلی صحیح نیست.');return}
+  const {error}=await sb.auth.updateUser({password:newPw});
+  if(error)throw error;
+  $('cpCurrent').value='';$('cpNew').value='';$('cpConfirm').value='';show('رمز عبور با موفقیت تغییر کرد ✓',true);
+  setTimeout(()=>closeModal('changePasswordModal'),1400);
+ }catch(e){console.error(e);show('تغییر رمز انجام نشد. دوباره تلاش کنید.')}
+ finally{btn.disabled=false;btn.textContent='ذخیره رمز جدید'}
+}
+function setPage(name){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
+ $('page-'+name)?.classList.add('active');
+ $('pageTitle').textContent=pageTitles[name]||name;
+ renderAll();
+}
+function fillPeople(){
+ const cur=$('personFilter').value;
+ $('personFilter').innerHTML='<option value="">همه افراد</option>'+data.members.map(m=>`<option value="${m.id}" ${String(m.id)===cur?'selected':''}>${esc(m.name)}</option>`).join('');
+ $('tPerson').innerHTML='<option value="">بدون مسئول</option>'+data.members.map(m=>`<option value="${m.id}">${esc(m.name)}</option>`).join('');
+ const wcur=$('workTypeFilter')?.value||'';
+ if($('workTypeFilter'))$('workTypeFilter').innerHTML='<option value="">همه نوع‌های کار</option>'+data.workTypes.map(w=>`<option value="${w.id}" ${String(w.id)===wcur?'selected':''}>${esc(w.name)}</option>`).join('');
+ $('tWorkType').innerHTML='<option value="">بدون دسته‌بندی</option>'+data.workTypes.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
+}
+function taskTable(list){
+ const h=`<thead><tr><th>انجام</th><th>فرد</th><th>نوع کار</th><th>تسک</th><th>اقدام</th><th>مهلت انجام</th><th>اولویت</th><th>وضعیت</th><th>عملیات</th></tr></thead>`;
+ const b=list.length?list.map(t=>{
+  const ts=taskTimeState(t);
+  return `<tr class="task-time-${ts.key} ${t.status==='done'?'done-row':''}">
+  <td><input type="checkbox" ${t.status==='done'?'checked':''} ${!canEditTask(t)?'disabled':''} data-action="toggle" data-id="${t.id}"></td>
+  <td><strong class="member-name-link" data-member-panel="${t.personId}">${esc(memberName(t.personId))}</strong></td>
+  <td><span class="badge medium">${esc(workTypeName(t.workTypeId))}</span></td>
+  <td><div class="task-title">${esc(t.title)}</div>${t.tag?`<div class="sub">${esc(t.tag)}</div>`:''}${timeStateHtml(t)}</td>
+  <td>${esc(t.action||'—')}${t.note?`<div class="sub">یادداشت: ${esc(t.note)}</div>`:''}</td>
+  <td>${deadlineLabel(t)}${reminderLabel(t)}</td>
+  <td><span class="badge ${t.priority}">${priorityLabel[t.priority]}</span></td>
+  <td><select class="status-select ${t.status}" ${!canEditTask(t)?'disabled':''} data-action="status" data-id="${t.id}">${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v}</option>`).join('')}</select></td>
+  <td>${canEditTask(t)?`<button class="smallbtn action-edit" data-action="edit-task" data-id="${t.id}">ویرایش</button>${isAdmin?` <button class="smallbtn action-delete" data-action="delete-task" data-id="${t.id}">حذف</button>`:''}`:'<span class="readonly-note">فقط مشاهده</span>'}</td>
+  </tr>`;
+ }).join(''):`<tr><td colspan="9" style="text-align:center;padding:28px;color:#7a879b">موردی وجود ندارد.</td></tr>`;
+ return h+`<tbody>${b}</tbody>`;
+}
+function memberCard(m){const a=data.tasks.filter(t=>t.personId===m.id),done=a.filter(t=>t.status==='done').length,late=a.filter(isLate).length;return `<div class="member"><div class="member-head"><div><div class="name member-name-link" data-member-panel="${m.id}">${esc(m.name)}</div><div class="sub">${esc(m.role||'بدون نقش')} • ${m.status==='active'?'فعال':'غیرفعال'}</div></div><div class="avatar">${avatarHtml(m)}</div></div><div class="mini"><span><b>${a.length}</b>کل</span><span><b>${done}</b>انجام</span><span><b>${late}</b>تأخیر</span></div><div style="margin-top:12px">${isAdmin?`<button class="smallbtn action-edit" data-action="edit-member" data-id="${m.id}">ویرایش</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</div></div>`}
+function dashboardMemberCard(m){
+ const a=data.tasks.filter(t=>t.personId===m.id),done=a.filter(t=>t.status==='done').length,late=a.filter(isLate).length;
+ return `<div class="dashboard-member" data-member-plan="${m.id}" title="نمایش برنامه کاری ${esc(m.name)}">
+   <div class="dash-avatar">${avatarHtml(m)}</div>
+   <div><div class="dash-name member-name-link" data-member-panel="${m.id}">${esc(m.name)}</div><div class="dash-role">${esc(m.role||'بدون نقش')}</div></div>
+   <div class="dash-mini"><span><b>${a.length}</b>کل</span><span><b>${done}</b>انجام</span><span><b>${late}</b>تأخیر</span></div>
+ </div>`;
+}
+
+function renderDashboard(){
+ const t=data.tasks;
+ $('totalCount').textContent=t.length;
+ $('doneCount').textContent=t.filter(x=>x.status==='done').length;
+ $('doingCount').textContent=t.filter(x=>x.status==='doing').length;
+ $('lateCount').textContent=t.filter(isLate).length;
+ $('blockedCount').textContent=t.filter(x=>x.status==='blocked').length;
+
+ const openToday=t.filter(x=>(x.deadlineType||'date')==='date'&&x.due===todayISO()&&x.status!=='done').length;
+ const medaniType=data.workTypes.find(w=>String(w.name).trim()==='امور محوله آقای مدنی');
+ $('mgLate').textContent=t.filter(isLate).length;
+ $('mgToday').textContent=openToday;
+ $('mgBlocked').textContent=t.filter(x=>x.status==='blocked').length;
+ $('mgMedani').textContent=medaniType?t.filter(x=>x.workTypeId===medaniType.id&&x.status!=='done').length:0;
+
+ $('managerTypeSummary').innerHTML=data.workTypes.map(w=>{
+   const c=t.filter(x=>x.workTypeId===w.id).length;
+   return `<div class="type-box"><b>${c}</b><small>${esc(w.name)}</small></div>`;
+ }).join('')||'<div class="sub">نوع کاری ثبت نشده است.</div>';
+
+ const attention=t.filter(x=>x.status!=='done'&&(isLate(x)||x.status==='blocked'||x.priority==='high'))
+   .sort((a,b)=>{
+      const ar=isLate(a)?0:(a.status==='blocked'?1:2);
+      const br=isLate(b)?0:(b.status==='blocked'?1:2);
+      if(ar!==br)return ar-br;
+      return ((a.due||'9999')+' '+(a.dueTime||'23:59')).localeCompare((b.due||'9999')+' '+(b.dueTime||'23:59'));
+   }).slice(0,8);
+
+ $('managerAttentionList').innerHTML=attention.length?attention.map(x=>{
+   const flag=isLate(x)?'عقب‌افتاده':(x.status==='blocked'?'متوقف':'اولویت بالا');
+   return `<div class="manager-item">
+      <strong>${esc(memberName(x.personId))}</strong>
+      <span>${esc(x.title)}</span>
+      <span>${esc(workTypeName(x.workTypeId))}</span>
+      <span class="${isLate(x)?'urgent':''}">${flag}</span>
+   </div>`;
+ }).join(''):'<div class="sub">مورد فوری برای پیگیری وجود ندارد.</div>';
+
+ $('dashboardMembers').innerHTML=data.members.filter(m=>m.status==='active').map(dashboardMemberCard).join('');
+ const dashboardTasks=[...t].sort(taskColorSort);
+ $('dashboardAllTasksTable').innerHTML=taskTable(dashboardTasks);
+}
+function renderToday(){
+ const list=data.tasks
+   .filter(t=>((t.deadlineType||'date')==='routine'&&t.status!=='done')||t.due===todayISO()||isLate(t)||t.status==='doing')
+   .sort(taskColorSort);
+ $('todayTable').innerHTML=taskTable(list);
+}
+function renderAllTasks(){
+ fillPeople();
+ const q=$('search').value.trim().toLowerCase(),pf=$('personFilter').value,wf=$('workTypeFilter').value,sf=$('statusFilter').value,pr=$('priorityFilter').value,sort=$('sortFilter').value;
+ let a=data.tasks.filter(t=>{
+   const hay=`${memberName(t.personId)} ${workTypeName(t.workTypeId)} ${t.title} ${t.action} ${t.note} ${t.tag}`.toLowerCase();
+   return(!q||hay.includes(q))&&(!pf||String(t.personId)===pf)&&(!wf||String(t.workTypeId)===wf)&&(!sf||t.status===sf)&&(!pr||t.priority===pr)
+ });
+ const priorityRank={high:0,medium:1,low:2};
+ a.sort((x,y)=>{
+   const colorDiff=taskColorRank(x)-taskColorRank(y);
+   if(colorDiff!==0)return colorDiff;
+   if(sort==='priority')return priorityRank[x.priority]-priorityRank[y.priority];
+   if(sort==='person')return memberName(x.personId).localeCompare(memberName(y.personId),'fa');
+   if(sort==='newest')return y.id-x.id;
+   return taskColorSort(x,y);
+ });
+ $('allTable').innerHTML=taskTable(a);
+}
+function renderMembers(){$('memberCards').innerHTML=data.members.map(memberCard).join('')}
+function renderWorkTypes(){
+ $('workTypeCards').innerHTML=data.workTypes.length?data.workTypes.map(w=>{
+   const count=data.tasks.filter(t=>t.workTypeId===w.id).length;
+   return `<div class="member"><div class="member-head"><div><div class="name">${esc(w.name)}</div><div class="sub">${count} تسک</div></div><div class="avatar">ن</div></div><div style="margin-top:12px">${isAdmin?`<button class="smallbtn action-edit" data-action="edit-worktype" data-id="${w.id}">ویرایش</button> <button class="smallbtn action-delete" data-action="delete-worktype" data-id="${w.id}">حذف</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</div></div>`;
+ }).join(''):'<div style="padding:24px;color:#7a879b">نوع کاری ثبت نشده است.</div>';
+}
+function renderCalendar(){const start=new Date();$('calendarGrid').innerHTML=Array.from({length:28},(_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);const iso=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()),arr=data.tasks.filter(t=>(t.deadlineType||'date')==='date'&&t.due===iso);return `<div class="day"><div class="date">${d.toLocaleDateString('fa-IR-u-ca-persian',{weekday:'short',month:'short',day:'numeric'})}</div>${arr.map(t=>`<div class="task-chip">${t.dueTime?esc(t.dueTime)+' • ':''}${esc(t.title)}</div>`).join('')}</div>`}).join('')}
+function managerState(t){const s=taskTimeState(t);if(s.key==='green'&&t.status==='done')return {key:'done',label:'انجام‌شده'};if(s.key==='red')return {key:'late',label:'عقب‌افتاده'};if(s.key==='orange')return {key:'near',label:'نزدیک مهلت'};if(s.key==='yellow')return {key:'doing',label:'در حال انجام'};return {key:'open',label:s.label||'باز'}}
+function managerReportMemberCard(m){const a=data.tasks.filter(t=>t.personId===m.id),done=a.filter(t=>managerState(t).key==='done').length,doing=a.filter(t=>managerState(t).key==='doing').length,near=a.filter(t=>managerState(t).key==='near').length,late=a.filter(t=>managerState(t).key==='late').length,open=a.filter(t=>managerState(t).key==='open').length,rate=a.length?Math.round(done/a.length*100):0,next=[...a].filter(t=>t.status!=='done').sort(taskColorSort)[0],nextText=next?`${managerState(next).label}: ${next.title}`:'کار باز ندارد';return `<div class="executive-member-card" data-member-panel="${m.id}" title="نمایش برنامه کاری ${esc(m.name)}"><div class="executive-member-top"><div class="executive-member-avatar">${avatarHtml(m)}</div><div><div class="executive-member-name">${esc(m.name)}</div><div class="executive-member-role">${esc(m.role||'بدون نقش')}</div></div><div class="executive-member-rate"><b>${rate}٪</b><span>تکمیل</span></div></div><div class="executive-member-counts"><span class="done"><b>${done}</b>انجام‌شده</span><span class="doing"><b>${doing}</b>در حال انجام</span><span class="near"><b>${near}</b>نزدیک مهلت</span><span class="late"><b>${late}</b>عقب‌افتاده</span><span class="open"><b>${open}</b>مهلت دارد</span></div><div class="executive-member-foot"><span>کل برنامه: <strong>${a.length} تسک</strong></span><span class="${late?'executive-alert':''}">${esc(nextText)}</span></div></div>`}
+function renderReports(){const t=data.tasks,done=t.filter(x=>managerState(x).key==='done').length,doing=t.filter(x=>managerState(x).key==='doing').length,near=t.filter(x=>managerState(x).key==='near').length,late=t.filter(x=>managerState(x).key==='late').length,open=t.filter(x=>managerState(x).key==='open').length,rate=t.length?Math.round(done/t.length*100):0;$('reportKpis').innerHTML=`<div class="executive-summary-card blue"><b>${t.length}</b><span>کل تسک‌ها</span></div><div class="executive-summary-card green"><b>${done}</b><span>انجام‌شده</span></div><div class="executive-summary-card yellow"><b>${doing}</b><span>در حال انجام</span></div><div class="executive-summary-card orange"><b>${near}</b><span>نزدیک مهلت</span></div><div class="executive-summary-card red"><b>${late}</b><span>عقب‌افتاده</span></div><div class="executive-summary-card purple"><b>${open}</b><span>هنوز مهلت دارد • تکمیل تیم ${rate}٪</span></div>`;const members=data.members.filter(m=>m.status==='active');$('reportRows').innerHTML=members.length?members.map(managerReportMemberCard).join(''):'<div class="sub">عضو فعالی ثبت نشده است.</div>'}
+
+function renderLiveFeed(){
+ const el=$('liveFeed');if(!el)return;
+ const items=activity.slice(0,12);
+ el.innerHTML=items.length?items.map(a=>{
+   let tm='';try{tm=new Date(a.time).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})}catch(_){}
+   return `<div class="live-item"><time>${esc(tm)}</time><div>${esc(a.msg)}</div></div>`;
+ }).join(''):'<div class="sub">هنوز تغییری ثبت نشده است.</div>';
+}
+
+function renderActivity(){$('activityTimeline').innerHTML=activity.length?activity.map(a=>`<div class="timeline-item"><b>${new Date(a.time).toLocaleString('fa-IR')}</b><div>${esc(a.msg)}</div></div>`).join(''):'<div style="padding:24px;color:#7a879b">تاریخچه‌ای وجود ندارد.</div>'}
+function renderAll(){$('taskMenuCount').textContent=data.tasks.length;$('todayText').textContent='امروز: '+new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',year:'numeric',month:'long',day:'numeric'});renderDashboard();renderToday();renderAllTasks();renderMembers();renderWorkTypes();renderCalendar();renderReports();renderActivity();renderLiveFeed()}
+function openTaskNew(){editTaskId=null;fillPeople();$('taskModalTitle').textContent='تسک جدید';$('tPerson').disabled=!isAdmin;$('tPerson').value=isAdmin?'':(currentMember()?.id??'');$('tWorkType').value='';$('tTitle').value='';$('tAction').value='';$('tStart').value=todayJ();$('tStartTime').value='';$('tDeadlineType').value='date';$('tDue').value=todayJ();$('tDueTime').value='';$('tReminderEnabled').checked=false;$('tReminderDate').value=todayJ();$('tReminderTime').value='';$('tReminderRepeat').value='once';updateDeadlineUI();updateReminderUI();$('tPriority').value='medium';$('tStatus').value='todo';$('tTag').value='';$('tNote').value='';openModal('taskModal')}
+function editTask(id){const t=data.tasks.find(x=>x.id===id);if(!t)return;if(!canEditTask(t)){toast('فقط تسک‌های خودتان قابل ویرایش است.');return}editTaskId=id;fillPeople();$('taskModalTitle').textContent='ویرایش تسک';$('tPerson').disabled=!isAdmin;$('tPerson').value=t.personId??'';$('tWorkType').value=t.workTypeId??'';$('tTitle').value=t.title;$('tAction').value=t.action||'';$('tStart').value=isoToJ(t.start||'');$('tStartTime').value=t.startTime||'';$('tDeadlineType').value=t.deadlineType||(t.due?'date':'unknown');$('tDue').value=isoToJ(t.due||'');$('tDueTime').value=t.dueTime||'';$('tReminderEnabled').checked=!!t.reminderEnabled;$('tReminderDate').value=isoToJ(t.reminderDate||'')||todayJ();$('tReminderTime').value=t.reminderTime||'';$('tReminderRepeat').value=t.reminderRepeat||'once';updateDeadlineUI();updateReminderUI();$('tPriority').value=t.priority;$('tStatus').value=t.status;$('tTag').value=t.tag||'';$('tNote').value=t.note||'';openModal('taskModal')}
+function openMemberNew(){if(!isAdmin){toast('ساخت حساب جدید از بخش مدیریت کاربران Supabase انجام می‌شود.');return}editMemberId=null;tempMemberPhoto='';$('memberModalTitle').textContent='عضو جدید';$('mName').value='';$('mRole').value='';$('mStatus').value='active';$('mNote').value='';$('mPhoto').value='';renderPhotoPreview('عضو');openModal('memberModal')}
+function editMember(id){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}const m=data.members.find(x=>x.id===id);if(!m)return;editMemberId=id;tempMemberPhoto=m.photo||'';$('memberModalTitle').textContent='ویرایش عضو';$('mName').value=m.name;$('mRole').value=m.role||'';$('mStatus').value=m.status;$('mNote').value=m.note||'';$('mPhoto').value='';renderPhotoPreview(m.name);openModal('memberModal')}
+
+function updateDeadlineUI(){
+ const show=$('tDeadlineType').value==='date';
+ $('dueDateWrap').style.display=show?'block':'none';
+ $('dueTimeWrap').style.display=show?'block':'none';
+}
+function updateReminderUI(){$('reminderFields').style.display=$('tReminderEnabled').checked?'grid':'none'}
+$('tDeadlineType').addEventListener('change',updateDeadlineUI);
+$('tReminderEnabled').addEventListener('change',updateReminderUI);
+$('notificationPermissionBtn').onclick=async()=>{
+ if(!('Notification' in window)){alert('این مرورگر اعلان سیستم را پشتیبانی نمی‌کند.');return}
+ const p=await Notification.requestPermission();
+ alert(p==='granted'?'اعلان مرورگر فعال شد.':'مجوز اعلان داده نشد.');
+};
+let activeAlarmTaskId=null;
+function beep(){
+ try{
+  const C=window.AudioContext||window.webkitAudioContext,ctx=new C(),o=ctx.createOscillator(),g=ctx.createGain();
+  o.connect(g);g.connect(ctx.destination);o.frequency.value=880;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();ctx.close()},650);
+ }catch(e){}
+}
+function showAlarm(t){
+ activeAlarmTaskId=t.id;
+ $('alarmText').innerHTML=`<b>${esc(t.title)}</b><br>${esc(memberName(t.personId))}${t.action?'<br>'+esc(t.action):''}`;
+ $('alarmBanner').classList.add('show');beep();
+ if('Notification' in window&&Notification.permission==='granted'){
+  try{new Notification('یادآور تسک',{body:`${t.title} — ${memberName(t.personId)}`})}catch(e){}
+ }
+}
+function reminderDue(t,now){
+ if(!t.reminderEnabled||t.status==='done'||!t.reminderTime)return false;
+ const [hh,mm]=t.reminderTime.split(':').map(Number);
+ if(now.getHours()!==hh||now.getMinutes()!==mm)return false;
+ const iso=now.getFullYear()+'-'+pad2(now.getMonth()+1)+'-'+pad2(now.getDate());
+ const key=iso+' '+t.reminderTime;
+ if(t.lastReminderKey===key)return false;
+ const rep=t.reminderRepeat||'once';
+ if(rep==='once'&&t.reminderDate!==iso)return false;
+ if(rep==='daily')return true;
+ if(rep==='workdays'){const d=now.getDay();return d!==5} // Friday excluded
+ if(rep==='weekly'){
+   if(!t.reminderDate)return false;
+   const base=new Date(t.reminderDate+'T00:00:00');
+   return base.getDay()===now.getDay()&&now>=base;
+ }
+ return false;
+}
+function checkReminders(){
+ const now=new Date();
+ let changed=false;
+ data.tasks.forEach(t=>{
+  if(reminderDue(t,now)){t.lastReminderKey=now.getFullYear()+'-'+pad2(now.getMonth()+1)+'-'+pad2(now.getDate())+' '+t.reminderTime;changed=true;showAlarm(t)}
+ });
+ if(changed){localStorage.setItem(KEY,JSON.stringify(data))}
+}
+setInterval(checkReminders,30000);setTimeout(checkReminders,1500);
+setInterval(()=>{renderAll()},60000);
+$('alarmDismissBtn').onclick=()=>{$('alarmBanner').classList.remove('show');activeAlarmTaskId=null};
+$('alarmDoneBtn').onclick=()=>{
+ const t=data.tasks.find(x=>x.id===activeAlarmTaskId);
+ if(t){t.status='done';t.updatedAt=new Date().toISOString();t.completedAt=new Date().toISOString();log(`تسک «${t.title}» از طریق یادآور انجام‌شده ثبت شد.`,t.id,'done');save('تسک انجام‌شده ثبت شد.')}
+ $('alarmBanner').classList.remove('show');activeAlarmTaskId=null;
+};
+
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));document.querySelectorAll('[data-open-task]').forEach(b=>b.addEventListener('click',openTaskNew));document.querySelectorAll('[data-open-member]').forEach(b=>b.addEventListener('click',()=>alert('برای افزودن عضو جدید، ابتدا حساب او را در Supabase Authentication ایجاد کنید؛ سپس پروفایل او باید به جدول profiles اضافه شود.')));document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeModal(b.dataset.close)));document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));$('addBtn').onclick=openTaskNew;$('quickMemberBtn').onclick=()=>alert('برای افزودن عضو جدید، ابتدا حساب او را در Supabase Authentication ایجاد کنید.');
+
+let activeMemberPanelId=null;
+let activeMemberTaskTab='today';
+
+function memberReportState(t){return managerState(t)}
+
+function renderMemberPanelTasks(){
+ const id=activeMemberPanelId;
+ const m=data.members.find(x=>x.id===id);
+ if(!m)return;
+ const all=data.tasks.filter(t=>t.personId===id);
+ let list=[...all];
+
+ if(activeMemberTaskTab==='today')list=list.filter(isTaskForToday);
+ else if(activeMemberTaskTab==='open')list=list.filter(t=>t.status!=='done');
+ else if(activeMemberTaskTab==='doing')list=list.filter(t=>t.status==='doing'&&!isLate(t));
+ else if(activeMemberTaskTab==='late')list=list.filter(t=>t.status!=='done'&&isLate(t));
+ else if(activeMemberTaskTab==='done')list=list.filter(t=>t.status==='done');
+
+ list.sort((a,b)=>{
+   const rank={late:0,near:1,doing:2,open:3,done:4};
+   const ra=rank[memberReportState(a).key],rb=rank[memberReportState(b).key];
+   if(ra!==rb)return ra-rb;
+   const ad=(a.deadlineType||'date')==='date'?((a.due||'9999')+' '+(a.dueTime||'23:59')):'9999';
+   const bd=(b.deadlineType||'date')==='date'?((b.due||'9999')+' '+(b.dueTime||'23:59')):'9999';
+   return ad.localeCompare(bd);
+ });
+
+ const el=$('memberPanelTaskList');
+ el.innerHTML=list.length?list.map(t=>{
+   const st=memberReportState(t);
+   const startText=t.start?`${jalaliWords(t.start)}${t.startTime?'، '+faDigits(t.startTime):''}`:'—';
+   const due=(t.deadlineType==='routine')?'روتین':(t.deadlineType==='unknown'?'نامشخص':`${t.due?jalaliWords(t.due):'—'}${t.dueTime?'، '+faDigits(t.dueTime):''}`);
+   return `<div class="member-task-row ${st.key}">
+     <div><div class="mtitle">${esc(t.title)}</div><div class="mmeta">${esc(workTypeName(t.workTypeId))}${t.action?' • '+esc(t.action):''}</div></div>
+     <div><div class="mmeta">شروع</div><strong>${esc(startText)}</strong><div class="mmeta" style="margin-top:5px">پایان</div><strong>${esc(due)}</strong></div>
+     <div><div class="mmeta">اولویت</div><strong>${esc(priorityLabel[t.priority]||'—')}</strong></div>
+     <div class="mstatus">${esc(st.label)}</div>
+     <div>${canEditTask(t)?`<button class="smallbtn action-edit" data-member-edit-task="${t.id}">ویرایش</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</div>
+   </div>`;
+ }).join(''):'<div class="sub" style="padding:24px;text-align:center">در این بخش تسکی برای این فرد وجود ندارد.</div>';
+}
+
+function openMemberPlan(id){
+ const m=data.members.find(x=>x.id===id);if(!m)return;
+ activeMemberPanelId=id;activeMemberTaskTab='all';
+ $('planMemberName').textContent=m.name;
+ $('planMemberRole').textContent=m.role||'';
+ $('planAvatar').innerHTML=avatarHtml(m);
+
+ const all=data.tasks.filter(t=>t.personId===id);
+ const done=all.filter(t=>managerState(t).key==='done').length;
+ const doing=all.filter(t=>managerState(t).key==='doing').length;
+ const near=all.filter(t=>managerState(t).key==='near').length;
+ const late=all.filter(t=>managerState(t).key==='late').length;
+ const progress=all.length?Math.round(done/all.length*100):0;
+
+ $('planKpis').innerHTML=`
+   <div class="member-workspace-kpi"><b>${all.length}</b><span>کل تسک‌ها</span></div>
+   <div class="member-workspace-kpi"><b style="color:#22965c">${done}</b><span>انجام‌شده</span></div>
+   <div class="member-workspace-kpi"><b style="color:#a77e00">${doing}</b><span>در حال انجام</span></div>
+   <div class="member-workspace-kpi"><b style="color:#c17800">${near}</b><span>نزدیک مهلت</span></div>
+   <div class="member-workspace-kpi"><b style="color:#cf3f45">${late}</b><span>عقب‌افتاده • پیشرفت ${progress}٪</span></div>`;
+
+ document.querySelectorAll('[data-member-task-tab]').forEach(b=>b.classList.toggle('active',b.dataset.memberTaskTab==='all'));
+ renderMemberPanelTasks();
+ openModal('memberPlanModal');
+}
+
+document.addEventListener('click',e=>{
+ const link=e.target.closest('[data-member-panel]');
+ if(link){e.stopPropagation();openMemberPlan(Number(link.dataset.memberPanel));return}
+
+ const oldCard=e.target.closest('[data-member-plan]');
+ if(oldCard&&!e.target.closest('button')){openMemberPlan(Number(oldCard.dataset.memberPlan));return}
+
+ const tab=e.target.closest('[data-member-task-tab]');
+ if(tab){
+   activeMemberTaskTab=tab.dataset.memberTaskTab;
+   document.querySelectorAll('[data-member-task-tab]').forEach(b=>b.classList.toggle('active',b===tab));
+   renderMemberPanelTasks();
+   return;
+ }
+
+ const edit=e.target.closest('[data-member-edit-task]');
+ if(edit){
+   closeModal('memberPlanModal');
+   editTask(Number(edit.dataset.memberEditTask));
+ }
+});
+
+$('memberPanelNewTaskBtn').onclick=()=>{
+ const id=activeMemberPanelId;
+ closeModal('memberPlanModal');
+ openTaskNew();
+ setTimeout(()=>{$('tPerson').value=String(id)},0);
+};
+
+function openWorkTypeNew(){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}editWorkTypeId=null;$('workTypeModalTitle').textContent='نوع کار جدید';$('wtName').value='';openModal('workTypeModal')}
+function editWorkType(id){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}const w=data.workTypes.find(x=>x.id===id);if(!w)return;editWorkTypeId=id;$('workTypeModalTitle').textContent='ویرایش نوع کار';$('wtName').value=w.name;openModal('workTypeModal')}
+$('addWorkTypeBtn').onclick=openWorkTypeNew;
+$('quickWorkTypeBtn').onclick=openWorkTypeNew;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(!isAdmin&&['delete-task','edit-member','edit-worktype','delete-worktype','delete-member'].includes(b.dataset.action)){toast('این عملیات فقط برای ادمین مجاز است.');return}const id=Number(b.dataset.id),a=b.dataset.action;if(a==='edit-task')editTask(id);else if(a==='delete-task'){const t=data.tasks.find(x=>x.id===id);if(t){pendingDelete={type:'task',id};$('deleteConfirmText').innerHTML=`تسک <b>«${esc(t.title)}»</b> حذف شود؟`;openModal('deleteConfirmModal')}}else if(a==='edit-member')editMember(id);else if(a==='edit-worktype')editWorkType(id);else if(a==='delete-worktype'){const w=data.workTypes.find(x=>x.id===id);if(w){pendingDelete={type:'worktype',id};$('deleteConfirmText').innerHTML=`نوع کار <b>«${esc(w.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های مرتبط حذف نمی‌شوند و بدون دسته‌بندی می‌مانند.</span>`;openModal('deleteConfirmModal')}}else if(a==='delete-member'){const m=data.members.find(x=>x.id===id);if(m){pendingDelete={type:'member',id};$('deleteConfirmText').innerHTML=`عضو <b>«${esc(m.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های او حذف نمی‌شوند و بدون مسئول باقی می‌مانند.</span>`;openModal('deleteConfirmModal')}}});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.action==='status'||el.dataset.action==='toggle'){const ct=data.tasks.find(x=>x.id===Number(el.dataset.id));if(!canEditTask(ct)){toast('فقط وضعیت تسک‌های خودتان قابل تغییر است.');loadOnlineData(false);return}}if(el.dataset.action==='status'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.value;t.updatedAt=new Date().toISOString();if(t.status==='done')t.completedAt=new Date().toISOString();else if(old==='done')t.completedAt='';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');updateTaskStatusDirect(t).catch(e=>{alert('ذخیره وضعیت انجام نشد: '+(e.message||e));loadOnlineData(false)})}}else if(el.dataset.action==='toggle'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.checked?'done':'todo';t.updatedAt=new Date().toISOString();t.completedAt=t.status==='done'?new Date().toISOString():'';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');updateTaskStatusDirect(t).catch(e=>{alert('ذخیره وضعیت انجام نشد: '+(e.message||e));loadOnlineData(false)})}}});
+$('saveTaskBtn').onclick=()=>{const title=$('tTitle').value.trim();if(!title){alert('عنوان تسک الزامی است.');return}if($('tStart').value&&!jToISO($('tStart').value)){alert('تاریخ شروع شمسی معتبر نیست.');return}if($('tDeadlineType').value==='date'&&$('tDue').value&&!jToISO($('tDue').value)){alert('تاریخ پایان شمسی معتبر نیست.');return}
+if($('tDeadlineType').value==='date'&&!$('tStart').value){alert('برای تسک تاریخ‌دار، تاریخ شروع را مشخص کنید.');return}
+if($('tDeadlineType').value==='date'&&!$('tDue').value){alert('برای تسک تاریخ‌دار، تاریخ پایان را مشخص کنید.');return}
+if($('tDeadlineType').value==='date'&&jToISO($('tStart').value)===jToISO($('tDue').value)&&$('tDueTime').value&&!$('tStartTime').value){alert('برای تسک ساعتیِ همان روز، ساعت شروع الزامی است تا رنگ‌بندی زمان دقیق محاسبه شود.');return}
+if($('tReminderEnabled').checked&&$('tReminderDate').value&&!jToISO($('tReminderDate').value)){alert('تاریخ یادآوری شمسی معتبر نیست.');return}
+if($('tReminderEnabled').checked&&!$('tReminderTime').value){alert('برای یادآور، ساعت را مشخص کنید.');return}
+const obj={id:editTaskId||Date.now(),personId:isAdmin?(Number($('tPerson').value)||null):(currentMember()?.id??null),workTypeId:Number($('tWorkType').value)||null,title,action:$('tAction').value.trim(),start:jToISO($('tStart').value),startTime:$('tStartTime').value||'',deadlineType:$('tDeadlineType').value,due:$('tDeadlineType').value==='date'?jToISO($('tDue').value):'',dueTime:$('tDeadlineType').value==='date'?($('tDueTime').value||''):'',reminderEnabled:$('tReminderEnabled').checked,reminderDate:$('tReminderEnabled').checked?jToISO($('tReminderDate').value):'',reminderTime:$('tReminderEnabled').checked?($('tReminderTime').value||''):'',reminderRepeat:$('tReminderEnabled').checked?$('tReminderRepeat').value:'once',lastReminderKey:editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.lastReminderKey||''):'',priority:$('tPriority').value,status:$('tStatus').value,tag:$('tTag').value.trim(),note:$('tNote').value.trim(),updatedAt:new Date().toISOString(),completedAt:$('tStatus').value==='done'?(editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.completedAt||new Date().toISOString()):new Date().toISOString()):''};
+const wasEdit=!!editTaskId;if(wasEdit){const oldTask=data.tasks.find(x=>x.id===editTaskId);obj.dbId=oldTask?.dbId;obj.assignedUuid=oldTask?.assignedUuid;const i=data.tasks.findIndex(x=>x.id===editTaskId);data.tasks[i]=obj;log(`تسک «${title}» ویرایش شد.`,obj.id,'edit')}else{if(!isAdmin){obj.personId=currentMember()?.id??null;obj.assignedUuid=currentUser?.id||null}data.tasks.push(obj);log(`تسک «${title}» ایجاد شد.`,obj.id,'create')}closeModal('taskModal');showSync(true);saveTaskDirect(obj,wasEdit,wasEdit?'تسک ویرایش شد.':'تسک اضافه شد.').catch(e=>{console.error(e);alert('ذخیره آنلاین انجام نشد: '+(e.message||e));loadOnlineData(false)}).finally(()=>showSync(false));setPage('all')};
+$('saveWorkTypeBtn').onclick=()=>{
+ const name=$('wtName').value.trim();
+ if(!name){alert('عنوان نوع کار الزامی است.');return}
+ if(editWorkTypeId){const i=data.workTypes.findIndex(x=>x.id===editWorkTypeId);data.workTypes[i]={id:editWorkTypeId,name};log(`نوع کار «${name}» ویرایش شد.`)}
+ else{data.workTypes.push({id:Date.now(),name});log(`نوع کار «${name}» اضافه شد.`)}
+ closeModal('workTypeModal');save('نوع کار ذخیره شد.');
+};
+$('saveMemberBtn').onclick=()=>{if(!isAdmin)return;if(!editMemberId){alert('برای عضو جدید ابتدا حساب کاربری او را در Supabase Authentication بسازید.');return}const name=$('mName').value.trim();if(!name){alert('نام عضو الزامی است.');return}const obj={id:editMemberId,name,role:$('mRole').value.trim(),status:$('mStatus').value,note:$('mNote').value.trim(),photo:tempMemberPhoto||''};const i=data.members.findIndex(x=>x.id===editMemberId);data.members[i]=obj;log(`عضو «${name}» ویرایش شد.`);closeModal('memberModal');save('اطلاعات عضو ویرایش شد.')};
+
+$('mName').addEventListener('input',()=>{if(!tempMemberPhoto)renderPhotoPreview($('mName').value)});
+$('mPhoto').addEventListener('change',e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ if(!file.type.startsWith('image/')){alert('لطفاً فایل تصویری انتخاب کنید.');e.target.value='';return}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  const img=new Image();
+  img.onload=()=>{
+   const size=240,canvas=document.createElement('canvas');canvas.width=size;canvas.height=size;
+   const ctx=canvas.getContext('2d'),scale=Math.max(size/img.width,size/img.height);
+   const w=img.width*scale,h=img.height*scale;
+   ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+   tempMemberPhoto=canvas.toDataURL('image/jpeg',0.82);
+   renderPhotoPreview($('mName').value);
+  };
+  img.src=reader.result;
+ };
+ reader.readAsDataURL(file);
+});
+$('removeMemberPhotoBtn').onclick=()=>{tempMemberPhoto='';$('mPhoto').value='';renderPhotoPreview($('mName').value)};
+
+$('cancelDeleteBtn').onclick=()=>{pendingDelete=null;closeModal('deleteConfirmModal')};$('confirmDeleteBtn').onclick=()=>{if(!isAdmin){toast('حذف فقط برای ادمین مجاز است.');return}if(!pendingDelete)return;if(pendingDelete.type==='task'){const t=data.tasks.find(x=>x.id===pendingDelete.id);data.tasks=data.tasks.filter(x=>x.id!==pendingDelete.id);if(t)log(`تسک «${t.title}» حذف شد.`)}else if(pendingDelete.type==='worktype'){const w=data.workTypes.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.workTypeId===pendingDelete.id)t.workTypeId=null});data.workTypes=data.workTypes.filter(x=>x.id!==pendingDelete.id);if(w)log(`نوع کار «${w.name}» حذف شد.`)}else if(pendingDelete.type==='member'){const m=data.members.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.personId===pendingDelete.id)t.personId=null});data.members=data.members.filter(x=>x.id!==pendingDelete.id);if(m)log(`عضو «${m.name}» حذف شد.`)}pendingDelete=null;closeModal('deleteConfirmModal');save('حذف انجام شد.')};
+['search','personFilter','workTypeFilter','statusFilter','priorityFilter','sortFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',renderAllTasks));
+$('clearActivityBtn').onclick=()=>{if(!isAdmin)return;activity=[];localStorage.setItem(ACT,'[]');renderActivity();renderLiveFeed();toast('تاریخچه محلی پاک شد.')};$('clearAllBtn').onclick=()=>alert('برای امنیت، حذف یکجای داده‌های آنلاین در V24 غیرفعال شده است.');
+function download(name,text,type){const blob=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+function wrapCanvasText(ctx,text,maxWidth){
+ const words=String(text||'').split(/\s+/),lines=[];let line='';
+ for(const w of words){const test=line?line+' '+w:w;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=w}else line=test}
+ if(line)lines.push(line);return lines;
+}
+
+function roundRect(ctx,x,y,w,h,r,fill,stroke){
+ if(w<2*r)r=w/2;if(h<2*r)r=h/2;
+ ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+ if(fill)ctx.fill();if(stroke)ctx.stroke();
+}
+
+function exportManagerImage(){
+ const members=data.members.filter(m=>m.status==='active');
+ const w=1680,margin=64,contentW=w-margin*2;
+ const topH=360,bottomH=92,memberGap=22,lineH=31,taskGap=7;
+ const c=document.createElement('canvas');
+ const measure=c.getContext('2d');
+ measure.direction='rtl';measure.textAlign='right';
+
+ function reportTaskState(t){
+   if(t.status==='done')return {key:'done',label:'انجام‌شده',color:'#22965c',bg:'#eaf8f0'};
+   if(isLate(t))return {key:'late',label:'عقب‌افتاده',color:'#cf3f45',bg:'#fff0f1'};
+   if(t.status==='doing')return {key:'doing',label:'درحال انجام',color:'#e58b16',bg:'#fff5e5'};
+   if(t.status==='todo')return {key:'todo',label:'شروع‌نشده',color:'#c69a16',bg:'#fff9df'};
+   return {key:'other',label:'باز',color:'#6d7b8f',bg:'#f4f6f9'};
+ }
+
+ // Build variable-height member cards from ALL tasks so workload and progress are visible.
+ const sections=members.map(m=>{
+   const tasks=data.tasks.filter(t=>t.personId===m.id)
+     .sort((a,b)=>{
+       const rank={late:0,doing:1,todo:2,other:3,done:4};
+       const ra=rank[reportTaskState(a).key],rb=rank[reportTaskState(b).key];
+       if(ra!==rb)return ra-rb;
+       const ad=(a.deadlineType||'date')==='date'?((a.due||'9999')+' '+(a.dueTime||'23:59')):'9999';
+       const bd=(b.deadlineType||'date')==='date'?((b.due||'9999')+' '+(b.dueTime||'23:59')):'9999';
+       return ad.localeCompare(bd);
+     });
+
+   measure.font='600 20px Tahoma, Arial';
+   const rows=tasks.length?tasks.map(t=>{
+     const lines=wrapCanvasText(measure,t.title,1160);
+     return {task:t,lines:lines.length?lines:['—']};
+   }):[{task:null,lines:['تسکی ثبت نشده است.']}];
+
+   const total=tasks.length;
+   const done=tasks.filter(t=>t.status==='done').length;
+   const late=tasks.filter(t=>t.status!=='done'&&isLate(t)).length;
+   const doing=tasks.filter(t=>t.status==='doing'&&!isLate(t)).length;
+   const todo=tasks.filter(t=>t.status==='todo'&&!isLate(t)).length;
+   const progress=total?Math.round(done/total*100):0;
+
+   const textLines=rows.reduce((n,r)=>n+r.lines.length,0);
+   const rowsHeight=textLines*lineH+Math.max(0,rows.length-1)*taskGap;
+   const height=Math.max(210,150+rowsHeight+30);
+   return {m,rows,total,done,late,doing,todo,progress,height};
+ });
+
+ const h=topH+sections.reduce((sum,s)=>sum+s.height+memberGap,0)+bottomH;
+ c.width=w;c.height=h;
+ const ctx=c.getContext('2d');
+ ctx.direction='rtl';ctx.textAlign='right';
+
+ // Background
+ ctx.fillStyle='#f3f6fa';ctx.fillRect(0,0,w,h);
+
+ // ===== Header =====
+ ctx.fillStyle='#16365f';ctx.fillRect(0,0,w,138);
+ ctx.fillStyle='#ffffff';ctx.font='900 42px Tahoma, Arial';
+ ctx.fillText('گزارش مدیریتی وضعیت کارهای تیم',w-margin,60);
+ ctx.fillStyle='#dbe7f6';ctx.font='19px Tahoma, Arial';
+ ctx.fillText('نمای بار کاری، پیشرفت و وضعیت تسک‌ها به تفکیک افراد',w-margin,98);
+
+ // Date
+ ctx.fillStyle='#ffffff';roundRect(ctx,margin,39,260,56,14,true,false);
+ ctx.fillStyle='#17365f';ctx.font='900 19px Tahoma, Arial';ctx.textAlign='center';
+ ctx.fillText(`تاریخ: ${jalaliWords(todayISO(),true)}`,margin+130,74);
+ ctx.textAlign='right';
+
+ // ===== Team summary =====
+ const all=data.tasks;
+ const total=all.length;
+ const done=all.filter(t=>t.status==='done').length;
+ const late=all.filter(t=>t.status!=='done'&&isLate(t)).length;
+ const doing=all.filter(t=>t.status==='doing'&&!isLate(t)).length;
+ const teamProgress=total?Math.round(done/total*100):0;
+
+ const kpis=[
+   {label:'کل تسک‌ها',value:total,accent:'#2f80ed'},
+   {label:'انجام‌شده',value:done,accent:'#22965c'},
+   {label:'درحال انجام',value:doing,accent:'#e58b16'},
+   {label:'عقب‌افتاده',value:late,accent:'#cf3f45'},
+   {label:'پیشرفت کل تیم',value:teamProgress+'٪',accent:'#7656d6'}
+ ];
+ const gap=14,cardW=(contentW-gap*4)/5,cardY=164,cardH=92;
+ kpis.forEach((k,i)=>{
+   const x=w-margin-cardW-i*(cardW+gap);
+   ctx.fillStyle='#ffffff';roundRect(ctx,x,cardY,cardW,cardH,16,true,false);
+   ctx.fillStyle=k.accent;roundRect(ctx,x+cardW-7,cardY+14,7,64,4,true,false);
+   ctx.fillStyle='#17243a';ctx.font='900 30px Tahoma, Arial';ctx.textAlign='center';
+   ctx.fillText(String(k.value),x+cardW/2,cardY+40);
+   ctx.fillStyle='#718096';ctx.font='16px Tahoma, Arial';
+   ctx.fillText(k.label,x+cardW/2,cardY+69);
+ });
+ ctx.textAlign='right';
+
+ // Legend
+ const legendY=292;
+ ctx.fillStyle='#17243a';ctx.font='900 20px Tahoma, Arial';
+ ctx.fillText('وضعیت تسک‌ها',w-margin,legendY);
+ const legend=[
+   ['انجام‌شده','#22965c'],
+   ['مهلت‌گذشته','#cf3f45'],
+   ['درحال انجام','#e58b16'],
+   ['شروع‌نشده','#c69a16']
+ ];
+ let lx=w-margin-170;
+ legend.forEach(([label,col])=>{
+   ctx.fillStyle=col;ctx.beginPath();ctx.arc(lx,legendY-7,6,0,Math.PI*2);ctx.fill();
+   ctx.fillStyle='#53657a';ctx.font='15px Tahoma, Arial';ctx.fillText(label,lx-14,legendY-1);
+   lx-=155;
+ });
+
+ // ===== Member cards =====
+ let y=topH;
+ sections.forEach((sec,index)=>{
+   const x=margin,cardW=contentW;
+
+   // Shadow
+   ctx.fillStyle='rgba(19,54,95,.075)';
+   roundRect(ctx,x+4,y+6,cardW,sec.height,20,true,false);
+
+   // Card
+   ctx.fillStyle='#ffffff';
+   roundRect(ctx,x,y,cardW,sec.height,20,true,false);
+
+   // Header strip
+   ctx.fillStyle='#f8fafc';
+   roundRect(ctx,x,y,cardW,92,20,true,false);
+   ctx.fillStyle='#ffffff';ctx.fillRect(x,y+72,cardW,20);
+
+   // Index
+   ctx.fillStyle='#eaf2ff';roundRect(ctx,x+20,y+24,44,40,11,true,false);
+   ctx.fillStyle='#2f6fc2';ctx.font='900 16px Tahoma, Arial';ctx.textAlign='center';
+   ctx.fillText(String(index+1),x+42,y+50);ctx.textAlign='right';
+
+   // Name
+   ctx.fillStyle='#17243a';ctx.font='900 28px Tahoma, Arial';
+   ctx.fillText(sec.m.name,w-margin-28,y+42);
+
+   // Progress percentage
+   ctx.fillStyle='#17243a';ctx.font='900 25px Tahoma, Arial';ctx.textAlign='left';
+   ctx.fillText(`${sec.progress}٪`,x+100,y+49);
+   ctx.fillStyle='#7a8798';ctx.font='13px Tahoma, Arial';
+   ctx.fillText('پیشرفت',x+100,y+70);
+   ctx.textAlign='right';
+
+   // Progress bar
+   const barX=x+135,barY=y+36,barW=310,barH=14;
+   ctx.fillStyle='#e8edf3';roundRect(ctx,barX,barY,barW,barH,7,true,false);
+   if(sec.progress>0){
+     ctx.fillStyle='#22965c';
+     roundRect(ctx,barX,barY,barW*(sec.progress/100),barH,7,true,false);
+   }
+
+   // Workload badge
+   ctx.fillStyle=sec.total>=8?'#fff0f1':sec.total>=5?'#fff5e5':'#edf7ff';
+   roundRect(ctx,x+475,y+25,165,48,12,true,false);
+   ctx.fillStyle=sec.total>=8?'#c83c43':sec.total>=5?'#b97800':'#2f6fc2';
+   ctx.font='900 16px Tahoma, Arial';ctx.textAlign='center';
+   ctx.fillText(sec.total>=8?'بار کاری بالا':sec.total>=5?'بار کاری متوسط':'بار کاری سبک',x+557,y+55);
+   ctx.textAlign='right';
+
+   // Divider
+   ctx.strokeStyle='#e7edf4';ctx.lineWidth=1;
+   ctx.beginPath();ctx.moveTo(x+22,y+96);ctx.lineTo(x+cardW-22,y+96);ctx.stroke();
+
+   // Tasks
+   let ty=y+130;
+   sec.rows.forEach((row,rowIndex)=>{
+     if(!row.task){
+       ctx.fillStyle='#8a96a7';ctx.font='18px Tahoma, Arial';
+       ctx.fillText(row.lines[0],w-margin-32,ty);
+       ty+=lineH;
+     }else{
+       const st=reportTaskState(row.task);
+
+       // Light status background behind each task row.
+       const rowHeight=row.lines.length*lineH+8;
+       ctx.fillStyle=st.bg;
+       roundRect(ctx,x+26,ty-24,cardW-52,rowHeight,10,true,false);
+
+       // Status stripe
+       ctx.fillStyle=st.color;
+       roundRect(ctx,w-margin-36,ty-18,6,Math.max(20,rowHeight-12),3,true,false);
+
+       // Task text only; color communicates status.
+       ctx.fillStyle=st.color;ctx.font='600 20px Tahoma, Arial';
+       row.lines.forEach(line=>{
+         ctx.fillText(line,w-margin-55,ty);
+         ty+=lineH;
+       });
+     }
+     if(rowIndex<sec.rows.length-1)ty+=taskGap;
+   });
+
+   y+=sec.height+memberGap;
+ });
+
+ // Footer
+ ctx.fillStyle='#6b7a90';ctx.font='14px Tahoma, Arial';
+ ctx.fillText('مبنای پیشرفت هر فرد: تعداد تسک‌های انجام‌شده نسبت به کل تسک‌های ثبت‌شده برای همان فرد.',w-margin,h-35);
+
+ c.toBlob(blob=>{
+   const a=document.createElement('a');
+   a.href=URL.createObjectURL(blob);
+   a.download=`گزارش-مدیریتی-وضعیت-تیم-${todayJ().replace(/\//g,'-')}.png`;
+   a.click();
+   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+ },'image/png');
+}
+$('exportManagerImageBtn').onclick=exportManagerImage;
+if($('exportManagerImageBtnReports'))$('exportManagerImageBtnReports').onclick=exportManagerImage;
+
+$('exportJsonBtn').onclick=()=>download('team-backup.json',JSON.stringify({data,activity},null,2),'application/json;charset=utf-8');
+$('exportCsvBtn').onclick=()=>{const rows=[['ID','Person','Work_Type','Title','Action','Start_Jalali','Start_Time','Deadline_Type','Due_Jalali','Due_Time','Reminder','Reminder_Date','Reminder_Time','Reminder_Repeat','Priority','Status','Tag','Note']];data.tasks.forEach(t=>rows.push([t.id,memberName(t.personId),workTypeName(t.workTypeId),t.title,t.action,isoToJ(t.start),t.startTime||'',t.deadlineType||'date',isoToJ(t.due),t.dueTime||'',t.reminderEnabled?'yes':'no',isoToJ(t.reminderDate),t.reminderTime||'',t.reminderRepeat||'',t.priority,t.status,t.tag,t.note]));const csv='\ufeff'+rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');download('tasks.csv',csv,'text/csv;charset=utf-8')};
+$('importJsonInput').onchange=async e=>{
+ const file=e.target.files?.[0];e.target.value='';if(!file)return;
+ if(!isAdmin){alert('فقط ادمین می‌تواند بکاپ را منتقل کند.');return;}
+ try{
+  const backup=JSON.parse(await file.text());
+  if(!backup?.data||!Array.isArray(backup.data.members)||!Array.isArray(backup.data.workTypes)||!Array.isArray(backup.data.tasks))throw new Error('ساختار فایل بکاپ معتبر نیست.');
+  const summary=`${backup.data.members.length} عضو، ${backup.data.workTypes.length} نوع کار و ${backup.data.tasks.length} تسک`;
+  if(!confirm('انتقال اولیه به Supabase انجام شود؟\n'+summary+'\nاین کار فقط وقتی جدول تسک‌ها خالی باشد مجاز است.'))return;
+  await migrateBackupPayload(backup);await loadOnlineData(false);
+  alert('انتقال با موفقیت انجام شد: '+summary);
+ }catch(err){console.error(err);alert('انتقال انجام نشد: '+(err?.message||String(err)))}
+};
+$('changeAvatarBtn').onclick=openAvatarModal;$('saveAvatarBtn').onclick=saveOwnAvatar;$('selfAvatarFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('selfAvatarPreview').innerHTML=`<img src="${r.result}" alt="پیش‌نمایش">`};r.readAsDataURL(f)});$('changePasswordBtn').onclick=openChangePassword;
+$('savePasswordBtn').onclick=saveNewPassword;
+$('cpConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')saveNewPassword()});
+$('loginBtn').onclick=doLogin;$('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});$('loginUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPassword').focus()});
+$('logoutBtn').onclick=async()=>{clearInterval(sessionKeepAliveTimer);clearInterval(dataAutoRefreshTimer);clearInterval(realtimeWatchdogTimer);if(realtimeChannel)await sb.removeChannel(realtimeChannel);await sb.auth.signOut();location.reload()};
+sb.auth.onAuthStateChange((event,session)=>{
+ if(session?.user)currentUser=session.user;
+ if(event==='TOKEN_REFRESHED')console.info('Session refreshed automatically.');
+});
+bootAuth();
+</script>
+</body>
+</html>
