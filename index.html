@@ -209,7 +209,7 @@ body.auth-locked .app{display:none}
 <div id="toast" class="toast"></div>
 <div class="topbar">
 <div class="title"><h1 id="pageTitle">داشبورد</h1><p id="todayText"></p></div>
-<div class="actions"><span class="online-pill"><i class="online-dot"></i> آنلاین</span><span class="user-chip" id="currentUserChip">—</span><button class="ghost" id="changePasswordBtn">تغییر رمز عبور</button><button class="ghost" id="logoutBtn">خروج</button><button class="ghost admin-control" id="quickMemberBtn">+ عضو</button><button class="primary admin-control" id="addBtn">+ تسک جدید</button></div>
+<div class="actions"><span class="online-pill"><i class="online-dot"></i> آنلاین</span><span class="user-chip" id="currentUserChip">—</span><button class="ghost" id="changeAvatarBtn">تغییر عکس پروفایل</button><button class="ghost" id="changePasswordBtn">تغییر رمز عبور</button><button class="ghost" id="logoutBtn">خروج</button><button class="ghost admin-control" id="quickMemberBtn">+ عضو</button><button class="primary" id="addBtn">+ تسک جدید</button></div>
 </div>
 
 <section class="page active" id="page-dashboard">
@@ -253,7 +253,7 @@ body.auth-locked .app{display:none}
 <div class="panel dashboard-alltasks-panel">
   <div class="toolbar">
     <div><h2 style="margin-bottom:4px">تمام تسک‌ها</h2><div class="hint">نمای کامل تسک‌های تیم در صفحه اصلی داشبورد</div></div>
-    <button class="primary admin-control" data-open-task>+ تسک جدید</button>
+    <button class="primary" data-open-task>+ تسک جدید</button>
   </div>
   <div class="legend-time">
       <span><i style="background:#d84b4b"></i> مهلت تمام‌شده</span>
@@ -274,12 +274,12 @@ body.auth-locked .app{display:none}
 </section>
 
 <section class="page" id="page-today">
-<div class="panel"><div class="toolbar"><div><h2>تسک‌های امروز</h2><div class="hint">برای هر تسک تاریخ پایان و ساعت پایان مستقل ثبت می‌شود.</div></div><button class="primary admin-control" data-open-task>+ تسک جدید</button></div><div class="table-wrap"><table id="todayTable"></table></div></div>
+<div class="panel"><div class="toolbar"><div><h2>تسک‌های امروز</h2><div class="hint">برای هر تسک تاریخ پایان و ساعت پایان مستقل ثبت می‌شود.</div></div><button class="primary" data-open-task>+ تسک جدید</button></div><div class="table-wrap"><table id="todayTable"></table></div></div>
 </section>
 
 <section class="page" id="page-all">
 <div class="panel">
-<div class="toolbar"><div><h2>همه تسک‌ها</h2><div class="hint">هر تسک جدید بلافاصله در این لیست نمایش داده می‌شود.</div></div><button class="primary admin-control" data-open-task>+ تسک جدید</button></div>
+<div class="toolbar"><div><h2>همه تسک‌ها</h2><div class="hint">هر تسک جدید بلافاصله در این لیست نمایش داده می‌شود.</div></div><button class="primary" data-open-task>+ تسک جدید</button></div>
 <div class="filters">
 <input id="search" placeholder="جستجو در عنوان، اقدام، برچسب یا یادداشت...">
 <select id="personFilter"><option value="">همه افراد</option></select>
@@ -403,6 +403,17 @@ body.auth-locked .app{display:none}
 </div></div>
 
 
+<div class="modal" id="avatarModal"><div class="modal-card" style="width:min(520px,100%)">
+<h2 style="margin-top:0">تغییر عکس پروفایل</h2>
+<p style="color:#718096;font-size:12px;line-height:1.9;margin-top:-4px">یک تصویر JPG، PNG یا WebP تا حداکثر ۵ مگابایت انتخاب کنید.</p>
+<div style="display:grid;gap:12px">
+<div id="selfAvatarPreview" class="photo-preview">ع</div>
+<div><label>انتخاب تصویر</label><input id="selfAvatarFile" type="file" accept="image/jpeg,image/png,image/webp"></div>
+<div id="avatarMessage" style="display:none;border-radius:10px;padding:10px;font-size:12px;line-height:1.8"></div>
+</div>
+<div class="modal-actions"><button class="primary" id="saveAvatarBtn">ذخیره عکس</button><button class="ghost" data-close="avatarModal">انصراف</button></div>
+</div></div>
+
 <div class="modal" id="changePasswordModal"><div class="modal-card" style="width:min(520px,100%)">
 <h2 style="margin-top:0">تغییر رمز عبور</h2>
 <p style="color:#718096;font-size:12px;line-height:1.9;margin-top:-4px">برای امنیت بیشتر، ابتدا رمز فعلی خود را وارد کنید. رمز جدید حداقل ۸ کاراکتر باشد.</p>
@@ -424,7 +435,7 @@ body.auth-locked .app{display:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
-// V27: self-service authenticated password change for every user
+// V28: team visibility + own-task editing + private user scope + self-service avatar
 const KEY='team_manager_dashboard_alltasks_v24_cache', ACT='team_manager_dashboard_alltasks_activity_v24';
 const SUPABASE_URL='https://tubcvprrceyjzhaxmvhy.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_eOyoTZAYcQNMc4sgncR3Mg_CeqqAav1';
@@ -446,20 +457,25 @@ const pageTitles={dashboard:'داشبورد',today:'تسک‌های امروز',
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function showSync(on,text='در حال ذخیره آنلاین...'){const e=$('syncOverlay');if(!e)return;e.textContent=text;e.style.display=on?'block':'none'}
-function roleFa(role){return ({admin:'ادمین کامل',manager:'مدیر - فقط مشاهده',supervisor:'سرپرست - فقط مشاهده',member:'عضو - فقط تسک‌های خود'})[role]||'کاربر'}
+function roleFa(role){if(role==='admin')return 'ادمین کامل';if(currentProfile?.visibility_scope==='private')return 'دسترسی خصوصی - فقط تسک‌های خود';return ({manager:'مدیر تیم',supervisor:'سرپرست تیم',member:'عضو تیم'})[role]||'کاربر'}
 function normalizeUsername(v){return String(v||'').trim().toLowerCase().replace(/\s+/g,'')}
 function normalizeWorkName(v){return String(v||'').replace(/\s+/g,'').replace(/های/g,'').replace(/ها/g,'').replace(/‌/g,'').trim()}
 function time5(v){return v?String(v).slice(0,5):''}
-function profileToMember(p){return {id:Number(p.legacy_member_id),name:p.full_name,role:p.job_title||'',status:p.is_active?'active':'inactive',note:'',photo:p.avatar_url||'',uuid:p.id}}
-function taskRowToLocal(t,profileByUuid,workByDbId){return {id:Number(t.legacy_id??t.id),dbId:t.id,personId:profileByUuid.get(t.assigned_to)?.legacy_member_id!=null?Number(profileByUuid.get(t.assigned_to).legacy_member_id):null,workTypeId:workByDbId.get(t.work_type_id)?.legacy_id!=null?Number(workByDbId.get(t.work_type_id).legacy_id):null,title:t.title||'',action:t.action_text||'',start:t.start_date||'',startTime:time5(t.start_time),due:t.due_date||'',dueTime:time5(t.due_time),priority:t.priority||'medium',status:t.status||'todo',tag:t.tag||'',note:t.note||'',deadlineType:t.deadline_type||(t.due_date?'date':'unknown'),reminderEnabled:!!t.reminder_enabled,reminderDate:t.reminder_date||'',reminderTime:time5(t.reminder_time),reminderRepeat:t.reminder_repeat||'once',lastReminderKey:t.last_reminder_key||'',updatedAt:t.updated_at||'',completedAt:t.completed_at||''}}
-function localTaskToRow(t,memberUuidByLegacy,workDbByLegacy){return {legacy_id:t.id,assigned_to:t.personId!=null?(memberUuidByLegacy.get(Number(t.personId))||null):null,work_type_id:t.workTypeId!=null?(workDbByLegacy.get(Number(t.workTypeId))||null):null,title:t.title,action_text:t.action||null,tag:t.tag||null,note:t.note||null,status:t.status,priority:t.priority,deadline_type:t.deadlineType||(t.due?'date':'unknown'),start_date:t.start||null,start_time:t.startTime||null,due_date:t.due||null,due_time:t.dueTime||null,reminder_enabled:!!t.reminderEnabled,reminder_date:t.reminderDate||null,reminder_time:t.reminderTime||null,reminder_repeat:t.reminderRepeat||'once',last_reminder_key:t.lastReminderKey||null,completed_at:t.completedAt||null,created_by:currentUser?.id||null}}
+function uuidLocalId(uuid){const h=String(uuid||'').replace(/-/g,'').slice(0,12);return -(parseInt(h||'1',16)%900000000+100000000)}
+function profileLocalId(p){return p?.legacy_member_id!=null?Number(p.legacy_member_id):uuidLocalId(p?.id)}
+function profileToMember(p){return {id:profileLocalId(p),name:p.full_name,role:p.job_title||'',status:p.is_active?'active':'inactive',note:'',photo:p.avatar_url||'',uuid:p.id,visibilityScope:p.visibility_scope||'team'}}
+function taskRowToLocal(t,profileByUuid,workByDbId){const ap=profileByUuid.get(t.assigned_to);return {id:Number(t.legacy_id??t.id),dbId:t.id,assignedUuid:t.assigned_to||null,personId:ap?profileLocalId(ap):null,workTypeId:workByDbId.get(t.work_type_id)?.legacy_id!=null?Number(workByDbId.get(t.work_type_id).legacy_id):null,title:t.title||'',action:t.action_text||'',start:t.start_date||'',startTime:time5(t.start_time),due:t.due_date||'',dueTime:time5(t.due_time),priority:t.priority||'medium',status:t.status||'todo',tag:t.tag||'',note:t.note||'',deadlineType:t.deadline_type||(t.due_date?'date':'unknown'),reminderEnabled:!!t.reminder_enabled,reminderDate:t.reminder_date||'',reminderTime:time5(t.reminder_time),reminderRepeat:t.reminder_repeat||'once',lastReminderKey:t.last_reminder_key||'',updatedAt:t.updated_at||'',completedAt:t.completed_at||''}}
+function localTaskToRow(t,memberUuidByLocalId,workDbByLegacy){return {legacy_id:t.id,assigned_to:t.assignedUuid||(t.personId!=null?(memberUuidByLocalId.get(Number(t.personId))||null):null),work_type_id:t.workTypeId!=null?(workDbByLegacy.get(Number(t.workTypeId))||null):null,title:t.title,action_text:t.action||null,tag:t.tag||null,note:t.note||null,status:t.status,priority:t.priority,deadline_type:t.deadlineType||(t.due?'date':'unknown'),start_date:t.start||null,start_time:t.startTime||null,due_date:t.due||null,due_time:t.dueTime||null,reminder_enabled:!!t.reminderEnabled,reminder_date:t.reminderDate||null,reminder_time:t.reminderTime||null,reminder_repeat:t.reminderRepeat||'once',last_reminder_key:t.lastReminderKey||null,completed_at:t.completedAt||null,created_by:currentUser?.id||null}}
+function currentMember(){return data.members.find(m=>m.uuid===currentUser?.id)||null}
+function canEditTask(t){return !!t&&(isAdmin||t.assignedUuid===currentUser?.id||currentMember()?.id===t.personId)}
+function canDeleteTask(){return isAdmin}
 async function fetchCurrentProfile(){const {data:p,error}=await sb.from('profiles').select('*').eq('id',currentUser.id).single();if(error)throw error;currentProfile=p;isAdmin=p.role==='admin'}
 async function loadOnlineData(showToast=false){
  const [pr,wr,tr]=await Promise.all([sb.from('profiles').select('*').order('full_name'),sb.from('work_types').select('*').order('id'),sb.from('tasks').select('*').order('id')]);
  if(pr.error)throw pr.error;if(wr.error)throw wr.error;if(tr.error)throw tr.error;
  const profiles=pr.data||[],works=wr.data||[],tasks=tr.data||[];
  const profileByUuid=new Map(profiles.map(p=>[p.id,p]));const workByDbId=new Map(works.map(w=>[w.id,w]));
- data.members=profiles.filter(p=>p.legacy_member_id!=null).map(profileToMember);
+ data.members=profiles.map(profileToMember);
  data.workTypes=works.filter(w=>w.is_active!==false).map(w=>({id:Number(w.legacy_id??w.id),dbId:w.id,name:w.name}));
  data.tasks=tasks.map(t=>taskRowToLocal(t,profileByUuid,workByDbId));
  localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ACT,JSON.stringify(activity));
@@ -487,8 +503,8 @@ async function syncAllToSupabase(){
  if(syncBusy)return;syncBusy=true;showSync(true);
  try{
   const [pr,wr,tr]=await Promise.all([sb.from('profiles').select('*'),sb.from('work_types').select('*'),sb.from('tasks').select('id,legacy_id')]);if(pr.error)throw pr.error;if(wr.error)throw wr.error;if(tr.error)throw tr.error;
-  const memberUuidByLegacy=new Map((pr.data||[]).filter(p=>p.legacy_member_id!=null).map(p=>[Number(p.legacy_member_id),p.id]));
-  for(const m of data.members){const uuid=memberUuidByLegacy.get(Number(m.id));if(uuid){const {error}=await sb.from('profiles').update({full_name:m.name,job_title:m.role||null,avatar_url:m.photo||null,is_active:m.status!=='inactive'}).eq('id',uuid);if(error)throw error;}}
+  const memberUuidByLegacy=new Map(data.members.map(m=>[Number(m.id),m.uuid]));
+  for(const m of data.members){const uuid=m.uuid||memberUuidByLegacy.get(Number(m.id));if(uuid){const {error}=await sb.from('profiles').update({full_name:m.name,job_title:m.role||null,avatar_url:m.photo||null,is_active:m.status!=='inactive'}).eq('id',uuid);if(error)throw error;}}
   let works=wr.data||[];for(const w of data.workTypes){let db=works.find(x=>Number(x.legacy_id)===Number(w.id));if(db){const {error}=await sb.from('work_types').update({name:w.name,is_active:true}).eq('id',db.id);if(error)throw error;}else{const {data:ins,error}=await sb.from('work_types').insert({legacy_id:w.id,name:w.name,is_active:true}).select().single();if(error)throw error;works.push(ins);}}
   const localWorkIds=new Set(data.workTypes.map(w=>Number(w.id)));for(const w of works){if(w.legacy_id!=null&&!localWorkIds.has(Number(w.legacy_id))){const {error}=await sb.from('work_types').delete().eq('id',w.id);if(error)throw error;}}
   const workDbByLegacy=new Map(works.filter(w=>w.legacy_id!=null&&localWorkIds.has(Number(w.legacy_id))).map(w=>[Number(w.legacy_id),w.id]));
@@ -500,7 +516,7 @@ async function syncAllToSupabase(){
 function applyPermissions(){
  document.querySelectorAll('.admin-control').forEach(el=>el.classList.toggle('admin-only-hidden',!isAdmin));
  $('accessRoleText').textContent=roleFa(currentProfile?.role);$('currentUserChip').textContent=(currentProfile?.full_name||'کاربر')+' • '+roleFa(currentProfile?.role);
- if(!isAdmin){document.querySelectorAll('[data-action="status"],[data-action="toggle"]').forEach(el=>el.disabled=true);}
+ document.querySelectorAll('[data-action="status"],[data-action="toggle"]').forEach(el=>{const t=data.tasks.find(x=>x.id===Number(el.dataset.id));el.disabled=!canEditTask(t)});
 }
 async function startRealtime(){
  if(realtimeChannel)await sb.removeChannel(realtimeChannel);
@@ -649,12 +665,39 @@ function reminderLabel(t){
 }
 function log(msg,taskId=null,kind='change'){activity.unshift({id:Date.now(),time:new Date().toISOString(),msg,taskId,kind});activity=activity.slice(0,300)}
 function toast(msg){const e=$('toast');e.textContent=msg;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2200)}
+async function saveTaskDirect(t,isEdit=false,msg=''){
+ const memberUuidByLocalId=new Map(data.members.map(m=>[Number(m.id),m.uuid]));
+ const {data:works,error:we}=await sb.from('work_types').select('id,legacy_id');if(we)throw we;
+ const workDbByLegacy=new Map((works||[]).filter(w=>w.legacy_id!=null).map(w=>[Number(w.legacy_id),w.id]));
+ if(!isAdmin){const me=currentMember();if(!me)throw new Error('پروفایل کاربر پیدا نشد.');t.personId=me.id;t.assignedUuid=currentUser.id}
+ const row=localTaskToRow(t,memberUuidByLocalId,workDbByLegacy);
+ if(isEdit){
+   let q=sb.from('tasks').update(row);q=t.dbId?q.eq('id',t.dbId):q.eq('legacy_id',t.id);const {error}=await q;if(error)throw error;
+ }else{
+   const {error}=await sb.from('tasks').insert(row);if(error)throw error;
+ }
+ await loadOnlineData(false);if(msg)toast(msg+' • ذخیره آنلاین شد.');
+}
+async function updateTaskStatusDirect(t){
+ if(!canEditTask(t))throw new Error('فقط تسک‌های خودتان قابل ویرایش است.');
+ let q=sb.from('tasks').update({status:t.status,completed_at:t.completedAt||null,updated_at:new Date().toISOString()});q=t.dbId?q.eq('id',t.dbId):q.eq('legacy_id',t.id);const {error}=await q;if(error)throw error;await loadOnlineData(false);
+}
 async function save(msg=''){
  if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');await loadOnlineData(false);return}
  localStorage.setItem(KEY,JSON.stringify(data));localStorage.setItem(ACT,JSON.stringify(activity));renderAll();applyPermissions();
  try{await syncAllToSupabase();if(msg)toast(msg+' • ذخیره آنلاین شد.')}catch(e){console.error(e);toast('خطا در ذخیره آنلاین؛ تغییر را دوباره بررسی کنید.');alert('ذخیره آنلاین انجام نشد: '+(e.message||e))}
 }
 function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
+function openAvatarModal(){
+ const p=$('selfAvatarPreview');p.innerHTML=currentProfile?.avatar_url?`<img src="${currentProfile.avatar_url}" alt="پروفایل">`:esc((currentProfile?.full_name||'ع').trim().charAt(0)||'ع');$('selfAvatarFile').value='';$('avatarMessage').style.display='none';openModal('avatarModal');
+}
+async function saveOwnAvatar(){
+ const file=$('selfAvatarFile').files?.[0],m=$('avatarMessage'),btn=$('saveAvatarBtn');
+ const show=(text,ok=false)=>{m.textContent=text;m.style.display='block';m.style.background=ok?'#edf9f2':'#fff0f0';m.style.color=ok?'#187a46':'#b92d2d';m.style.border='1px solid '+(ok?'#bfe8cf':'#f0caca')};
+ if(!file){show('ابتدا یک تصویر انتخاب کنید.');return}if(!['image/jpeg','image/png','image/webp'].includes(file.type)){show('فرمت تصویر باید JPG، PNG یا WebP باشد.');return}if(file.size>5*1024*1024){show('حجم تصویر باید حداکثر ۵ مگابایت باشد.');return}
+ btn.disabled=true;showSync(true,'در حال بارگذاری عکس پروفایل...');
+ try{const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';const path=`${currentUser.id}/avatar-${Date.now()}.${ext}`;const {error:upErr}=await sb.storage.from('avatars').upload(path,file,{cacheControl:'3600',upsert:false});if(upErr)throw upErr;const {data:pub}=sb.storage.from('avatars').getPublicUrl(path);const url=pub?.publicUrl;if(!url)throw new Error('آدرس تصویر ساخته نشد.');const {error:rpcErr}=await sb.rpc('update_my_avatar',{p_avatar_url:url});if(rpcErr)throw rpcErr;currentProfile.avatar_url=url;await loadOnlineData(false);show('عکس پروفایل با موفقیت تغییر کرد.',true);setTimeout(()=>closeModal('avatarModal'),900)}catch(e){console.error(e);show('ذخیره عکس انجام نشد: '+(e.message||e))}finally{btn.disabled=false;showSync(false)}
+}
 function openChangePassword(){
  $('cpCurrent').value='';$('cpNew').value='';$('cpConfirm').value='';
  const m=$('cpMessage');m.style.display='none';m.textContent='';
@@ -696,19 +739,19 @@ function fillPeople(){
  $('tWorkType').innerHTML='<option value="">بدون دسته‌بندی</option>'+data.workTypes.map(w=>`<option value="${w.id}">${esc(w.name)}</option>`).join('');
 }
 function taskTable(list){
- const h=`<thead><tr><th>انجام</th><th>فرد</th><th>نوع کار</th><th>تسک</th><th>اقدام</th><th>مهلت انجام</th><th>اولویت</th><th>وضعیت</th><th>عملیات ادمین</th></tr></thead>`;
+ const h=`<thead><tr><th>انجام</th><th>فرد</th><th>نوع کار</th><th>تسک</th><th>اقدام</th><th>مهلت انجام</th><th>اولویت</th><th>وضعیت</th><th>عملیات</th></tr></thead>`;
  const b=list.length?list.map(t=>{
   const ts=taskTimeState(t);
   return `<tr class="task-time-${ts.key} ${t.status==='done'?'done-row':''}">
-  <td><input type="checkbox" ${t.status==='done'?'checked':''} ${!isAdmin?'disabled':''} data-action="toggle" data-id="${t.id}"></td>
+  <td><input type="checkbox" ${t.status==='done'?'checked':''} ${!canEditTask(t)?'disabled':''} data-action="toggle" data-id="${t.id}"></td>
   <td><strong class="member-name-link" data-member-panel="${t.personId}">${esc(memberName(t.personId))}</strong></td>
   <td><span class="badge medium">${esc(workTypeName(t.workTypeId))}</span></td>
   <td><div class="task-title">${esc(t.title)}</div>${t.tag?`<div class="sub">${esc(t.tag)}</div>`:''}${timeStateHtml(t)}</td>
   <td>${esc(t.action||'—')}${t.note?`<div class="sub">یادداشت: ${esc(t.note)}</div>`:''}</td>
   <td>${deadlineLabel(t)}${reminderLabel(t)}</td>
   <td><span class="badge ${t.priority}">${priorityLabel[t.priority]}</span></td>
-  <td><select class="status-select ${t.status}" ${!isAdmin?'disabled':''} data-action="status" data-id="${t.id}">${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v}</option>`).join('')}</select></td>
-  <td>${isAdmin?`<button class="smallbtn action-edit" data-action="edit-task" data-id="${t.id}">ویرایش</button> <button class="smallbtn action-delete" data-action="delete-task" data-id="${t.id}">حذف</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</td>
+  <td><select class="status-select ${t.status}" ${!canEditTask(t)?'disabled':''} data-action="status" data-id="${t.id}">${Object.entries(statusLabel).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v}</option>`).join('')}</select></td>
+  <td>${canEditTask(t)?`<button class="smallbtn action-edit" data-action="edit-task" data-id="${t.id}">ویرایش</button>${isAdmin?` <button class="smallbtn action-delete" data-action="delete-task" data-id="${t.id}">حذف</button>`:''}`:'<span class="readonly-note">فقط مشاهده</span>'}</td>
   </tr>`;
  }).join(''):`<tr><td colspan="9" style="text-align:center;padding:28px;color:#7a879b">موردی وجود ندارد.</td></tr>`;
  return h+`<tbody>${b}</tbody>`;
@@ -812,8 +855,8 @@ function renderLiveFeed(){
 
 function renderActivity(){$('activityTimeline').innerHTML=activity.length?activity.map(a=>`<div class="timeline-item"><b>${new Date(a.time).toLocaleString('fa-IR')}</b><div>${esc(a.msg)}</div></div>`).join(''):'<div style="padding:24px;color:#7a879b">تاریخچه‌ای وجود ندارد.</div>'}
 function renderAll(){$('taskMenuCount').textContent=data.tasks.length;$('todayText').textContent='امروز: '+new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',year:'numeric',month:'long',day:'numeric'});renderDashboard();renderToday();renderAllTasks();renderMembers();renderWorkTypes();renderCalendar();renderReports();renderActivity();renderLiveFeed()}
-function openTaskNew(){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}editTaskId=null;fillPeople();$('taskModalTitle').textContent='تسک جدید';$('tPerson').value='';$('tWorkType').value='';$('tTitle').value='';$('tAction').value='';$('tStart').value=todayJ();$('tStartTime').value='';$('tDeadlineType').value='date';$('tDue').value=todayJ();$('tDueTime').value='';$('tReminderEnabled').checked=false;$('tReminderDate').value=todayJ();$('tReminderTime').value='';$('tReminderRepeat').value='once';updateDeadlineUI();updateReminderUI();$('tPriority').value='medium';$('tStatus').value='todo';$('tTag').value='';$('tNote').value='';openModal('taskModal')}
-function editTask(id){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}const t=data.tasks.find(x=>x.id===id);if(!t)return;editTaskId=id;fillPeople();$('taskModalTitle').textContent='ویرایش تسک';$('tPerson').value=t.personId??'';$('tWorkType').value=t.workTypeId??'';$('tTitle').value=t.title;$('tAction').value=t.action||'';$('tStart').value=isoToJ(t.start||'');$('tStartTime').value=t.startTime||'';$('tDeadlineType').value=t.deadlineType||(t.due?'date':'unknown');$('tDue').value=isoToJ(t.due||'');$('tDueTime').value=t.dueTime||'';$('tReminderEnabled').checked=!!t.reminderEnabled;$('tReminderDate').value=isoToJ(t.reminderDate||'')||todayJ();$('tReminderTime').value=t.reminderTime||'';$('tReminderRepeat').value=t.reminderRepeat||'once';updateDeadlineUI();updateReminderUI();$('tPriority').value=t.priority;$('tStatus').value=t.status;$('tTag').value=t.tag||'';$('tNote').value=t.note||'';openModal('taskModal')}
+function openTaskNew(){editTaskId=null;fillPeople();$('taskModalTitle').textContent='تسک جدید';$('tPerson').disabled=!isAdmin;$('tPerson').value=isAdmin?'':(currentMember()?.id??'');$('tWorkType').value='';$('tTitle').value='';$('tAction').value='';$('tStart').value=todayJ();$('tStartTime').value='';$('tDeadlineType').value='date';$('tDue').value=todayJ();$('tDueTime').value='';$('tReminderEnabled').checked=false;$('tReminderDate').value=todayJ();$('tReminderTime').value='';$('tReminderRepeat').value='once';updateDeadlineUI();updateReminderUI();$('tPriority').value='medium';$('tStatus').value='todo';$('tTag').value='';$('tNote').value='';openModal('taskModal')}
+function editTask(id){const t=data.tasks.find(x=>x.id===id);if(!t)return;if(!canEditTask(t)){toast('فقط تسک‌های خودتان قابل ویرایش است.');return}editTaskId=id;fillPeople();$('taskModalTitle').textContent='ویرایش تسک';$('tPerson').disabled=!isAdmin;$('tPerson').value=t.personId??'';$('tWorkType').value=t.workTypeId??'';$('tTitle').value=t.title;$('tAction').value=t.action||'';$('tStart').value=isoToJ(t.start||'');$('tStartTime').value=t.startTime||'';$('tDeadlineType').value=t.deadlineType||(t.due?'date':'unknown');$('tDue').value=isoToJ(t.due||'');$('tDueTime').value=t.dueTime||'';$('tReminderEnabled').checked=!!t.reminderEnabled;$('tReminderDate').value=isoToJ(t.reminderDate||'')||todayJ();$('tReminderTime').value=t.reminderTime||'';$('tReminderRepeat').value=t.reminderRepeat||'once';updateDeadlineUI();updateReminderUI();$('tPriority').value=t.priority;$('tStatus').value=t.status;$('tTag').value=t.tag||'';$('tNote').value=t.note||'';openModal('taskModal')}
 function openMemberNew(){if(!isAdmin){toast('ساخت حساب جدید از بخش مدیریت کاربران Supabase انجام می‌شود.');return}editMemberId=null;tempMemberPhoto='';$('memberModalTitle').textContent='عضو جدید';$('mName').value='';$('mRole').value='';$('mStatus').value='active';$('mNote').value='';$('mPhoto').value='';renderPhotoPreview('عضو');openModal('memberModal')}
 function editMember(id){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}const m=data.members.find(x=>x.id===id);if(!m)return;editMemberId=id;tempMemberPhoto=m.photo||'';$('memberModalTitle').textContent='ویرایش عضو';$('mName').value=m.name;$('mRole').value=m.role||'';$('mStatus').value=m.status;$('mNote').value=m.note||'';$('mPhoto').value='';renderPhotoPreview(m.name);openModal('memberModal')}
 
@@ -919,7 +962,7 @@ function renderMemberPanelTasks(){
      <div><div class="mmeta">شروع</div><strong>${esc(startText)}</strong><div class="mmeta" style="margin-top:5px">پایان</div><strong>${esc(due)}</strong></div>
      <div><div class="mmeta">اولویت</div><strong>${esc(priorityLabel[t.priority]||'—')}</strong></div>
      <div class="mstatus">${esc(st.label)}</div>
-     <div>${isAdmin?`<button class="smallbtn action-edit" data-member-edit-task="${t.id}">ویرایش</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</div>
+     <div>${canEditTask(t)?`<button class="smallbtn action-edit" data-member-edit-task="${t.id}">ویرایش</button>`:'<span class="readonly-note">فقط مشاهده</span>'}</div>
    </div>`;
  }).join(''):'<div class="sub" style="padding:24px;text-align:center">در این بخش تسکی برای این فرد وجود ندارد.</div>';
 }
@@ -983,16 +1026,16 @@ function openWorkTypeNew(){if(!isAdmin){toast('این حساب فقط دسترس
 function editWorkType(id){if(!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');return}const w=data.workTypes.find(x=>x.id===id);if(!w)return;editWorkTypeId=id;$('workTypeModalTitle').textContent='ویرایش نوع کار';$('wtName').value=w.name;openModal('workTypeModal')}
 $('addWorkTypeBtn').onclick=openWorkTypeNew;
 $('quickWorkTypeBtn').onclick=openWorkTypeNew;
-document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(!isAdmin&&['edit-task','delete-task','edit-member','edit-worktype','delete-worktype','delete-member'].includes(b.dataset.action)){toast('این حساب فقط دسترسی مشاهده دارد.');return}const id=Number(b.dataset.id),a=b.dataset.action;if(a==='edit-task')editTask(id);else if(a==='delete-task'){const t=data.tasks.find(x=>x.id===id);if(t){pendingDelete={type:'task',id};$('deleteConfirmText').innerHTML=`تسک <b>«${esc(t.title)}»</b> حذف شود؟`;openModal('deleteConfirmModal')}}else if(a==='edit-member')editMember(id);else if(a==='edit-worktype')editWorkType(id);else if(a==='delete-worktype'){const w=data.workTypes.find(x=>x.id===id);if(w){pendingDelete={type:'worktype',id};$('deleteConfirmText').innerHTML=`نوع کار <b>«${esc(w.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های مرتبط حذف نمی‌شوند و بدون دسته‌بندی می‌مانند.</span>`;openModal('deleteConfirmModal')}}else if(a==='delete-member'){const m=data.members.find(x=>x.id===id);if(m){pendingDelete={type:'member',id};$('deleteConfirmText').innerHTML=`عضو <b>«${esc(m.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های او حذف نمی‌شوند و بدون مسئول باقی می‌مانند.</span>`;openModal('deleteConfirmModal')}}});
-document.addEventListener('change',e=>{const el=e.target;if((el.dataset.action==='status'||el.dataset.action==='toggle')&&!isAdmin){toast('این حساب فقط دسترسی مشاهده دارد.');loadOnlineData(false);return}if(el.dataset.action==='status'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.value;t.updatedAt=new Date().toISOString();if(t.status==='done')t.completedAt=new Date().toISOString();else if(old==='done')t.completedAt='';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');save()}}else if(el.dataset.action==='toggle'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.checked?'done':'todo';t.updatedAt=new Date().toISOString();t.completedAt=t.status==='done'?new Date().toISOString():'';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');save()}}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(!isAdmin&&['delete-task','edit-member','edit-worktype','delete-worktype','delete-member'].includes(b.dataset.action)){toast('این عملیات فقط برای ادمین مجاز است.');return}const id=Number(b.dataset.id),a=b.dataset.action;if(a==='edit-task')editTask(id);else if(a==='delete-task'){const t=data.tasks.find(x=>x.id===id);if(t){pendingDelete={type:'task',id};$('deleteConfirmText').innerHTML=`تسک <b>«${esc(t.title)}»</b> حذف شود؟`;openModal('deleteConfirmModal')}}else if(a==='edit-member')editMember(id);else if(a==='edit-worktype')editWorkType(id);else if(a==='delete-worktype'){const w=data.workTypes.find(x=>x.id===id);if(w){pendingDelete={type:'worktype',id};$('deleteConfirmText').innerHTML=`نوع کار <b>«${esc(w.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های مرتبط حذف نمی‌شوند و بدون دسته‌بندی می‌مانند.</span>`;openModal('deleteConfirmModal')}}else if(a==='delete-member'){const m=data.members.find(x=>x.id===id);if(m){pendingDelete={type:'member',id};$('deleteConfirmText').innerHTML=`عضو <b>«${esc(m.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های او حذف نمی‌شوند و بدون مسئول باقی می‌مانند.</span>`;openModal('deleteConfirmModal')}}});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.action==='status'||el.dataset.action==='toggle'){const ct=data.tasks.find(x=>x.id===Number(el.dataset.id));if(!canEditTask(ct)){toast('فقط وضعیت تسک‌های خودتان قابل تغییر است.');loadOnlineData(false);return}}if(el.dataset.action==='status'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.value;t.updatedAt=new Date().toISOString();if(t.status==='done')t.completedAt=new Date().toISOString();else if(old==='done')t.completedAt='';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');updateTaskStatusDirect(t).catch(e=>{alert('ذخیره وضعیت انجام نشد: '+(e.message||e));loadOnlineData(false)})}}else if(el.dataset.action==='toggle'){const t=data.tasks.find(x=>x.id===Number(el.dataset.id));if(t){const old=t.status;t.status=el.checked?'done':'todo';t.updatedAt=new Date().toISOString();t.completedAt=t.status==='done'?new Date().toISOString():'';log(`وضعیت تسک «${t.title}» از «${statusLabel[old]}» به «${statusLabel[t.status]}» تغییر کرد.`,t.id,'status');updateTaskStatusDirect(t).catch(e=>{alert('ذخیره وضعیت انجام نشد: '+(e.message||e));loadOnlineData(false)})}}});
 $('saveTaskBtn').onclick=()=>{const title=$('tTitle').value.trim();if(!title){alert('عنوان تسک الزامی است.');return}if($('tStart').value&&!jToISO($('tStart').value)){alert('تاریخ شروع شمسی معتبر نیست.');return}if($('tDeadlineType').value==='date'&&$('tDue').value&&!jToISO($('tDue').value)){alert('تاریخ پایان شمسی معتبر نیست.');return}
 if($('tDeadlineType').value==='date'&&!$('tStart').value){alert('برای تسک تاریخ‌دار، تاریخ شروع را مشخص کنید.');return}
 if($('tDeadlineType').value==='date'&&!$('tDue').value){alert('برای تسک تاریخ‌دار، تاریخ پایان را مشخص کنید.');return}
 if($('tDeadlineType').value==='date'&&jToISO($('tStart').value)===jToISO($('tDue').value)&&$('tDueTime').value&&!$('tStartTime').value){alert('برای تسک ساعتیِ همان روز، ساعت شروع الزامی است تا رنگ‌بندی زمان دقیق محاسبه شود.');return}
 if($('tReminderEnabled').checked&&$('tReminderDate').value&&!jToISO($('tReminderDate').value)){alert('تاریخ یادآوری شمسی معتبر نیست.');return}
 if($('tReminderEnabled').checked&&!$('tReminderTime').value){alert('برای یادآور، ساعت را مشخص کنید.');return}
-const obj={id:editTaskId||Date.now(),personId:Number($('tPerson').value)||null,workTypeId:Number($('tWorkType').value)||null,title,action:$('tAction').value.trim(),start:jToISO($('tStart').value),startTime:$('tStartTime').value||'',deadlineType:$('tDeadlineType').value,due:$('tDeadlineType').value==='date'?jToISO($('tDue').value):'',dueTime:$('tDeadlineType').value==='date'?($('tDueTime').value||''):'',reminderEnabled:$('tReminderEnabled').checked,reminderDate:$('tReminderEnabled').checked?jToISO($('tReminderDate').value):'',reminderTime:$('tReminderEnabled').checked?($('tReminderTime').value||''):'',reminderRepeat:$('tReminderEnabled').checked?$('tReminderRepeat').value:'once',lastReminderKey:editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.lastReminderKey||''):'',priority:$('tPriority').value,status:$('tStatus').value,tag:$('tTag').value.trim(),note:$('tNote').value.trim(),updatedAt:new Date().toISOString(),completedAt:$('tStatus').value==='done'?(editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.completedAt||new Date().toISOString()):new Date().toISOString()):''};
-if(editTaskId){const i=data.tasks.findIndex(x=>x.id===editTaskId);data.tasks[i]=obj;log(`تسک «${title}» ویرایش شد.`,obj.id,'edit')}else{data.tasks.push(obj);log(`تسک «${title}» ایجاد شد.`,obj.id,'create')}closeModal('taskModal');save(editTaskId?'تسک ویرایش شد.':'تسک اضافه شد.');setPage('all')};
+const obj={id:editTaskId||Date.now(),personId:isAdmin?(Number($('tPerson').value)||null):(currentMember()?.id??null),workTypeId:Number($('tWorkType').value)||null,title,action:$('tAction').value.trim(),start:jToISO($('tStart').value),startTime:$('tStartTime').value||'',deadlineType:$('tDeadlineType').value,due:$('tDeadlineType').value==='date'?jToISO($('tDue').value):'',dueTime:$('tDeadlineType').value==='date'?($('tDueTime').value||''):'',reminderEnabled:$('tReminderEnabled').checked,reminderDate:$('tReminderEnabled').checked?jToISO($('tReminderDate').value):'',reminderTime:$('tReminderEnabled').checked?($('tReminderTime').value||''):'',reminderRepeat:$('tReminderEnabled').checked?$('tReminderRepeat').value:'once',lastReminderKey:editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.lastReminderKey||''):'',priority:$('tPriority').value,status:$('tStatus').value,tag:$('tTag').value.trim(),note:$('tNote').value.trim(),updatedAt:new Date().toISOString(),completedAt:$('tStatus').value==='done'?(editTaskId?(data.tasks.find(x=>x.id===editTaskId)?.completedAt||new Date().toISOString()):new Date().toISOString()):''};
+const wasEdit=!!editTaskId;if(wasEdit){const oldTask=data.tasks.find(x=>x.id===editTaskId);obj.dbId=oldTask?.dbId;obj.assignedUuid=oldTask?.assignedUuid;const i=data.tasks.findIndex(x=>x.id===editTaskId);data.tasks[i]=obj;log(`تسک «${title}» ویرایش شد.`,obj.id,'edit')}else{if(!isAdmin){obj.personId=currentMember()?.id??null;obj.assignedUuid=currentUser?.id||null}data.tasks.push(obj);log(`تسک «${title}» ایجاد شد.`,obj.id,'create')}closeModal('taskModal');showSync(true);saveTaskDirect(obj,wasEdit,wasEdit?'تسک ویرایش شد.':'تسک اضافه شد.').catch(e=>{console.error(e);alert('ذخیره آنلاین انجام نشد: '+(e.message||e));loadOnlineData(false)}).finally(()=>showSync(false));setPage('all')};
 $('saveWorkTypeBtn').onclick=()=>{
  const name=$('wtName').value.trim();
  if(!name){alert('عنوان نوع کار الزامی است.');return}
@@ -1023,7 +1066,7 @@ $('mPhoto').addEventListener('change',e=>{
 });
 $('removeMemberPhotoBtn').onclick=()=>{tempMemberPhoto='';$('mPhoto').value='';renderPhotoPreview($('mName').value)};
 
-$('cancelDeleteBtn').onclick=()=>{pendingDelete=null;closeModal('deleteConfirmModal')};$('confirmDeleteBtn').onclick=()=>{if(!pendingDelete)return;if(pendingDelete.type==='task'){const t=data.tasks.find(x=>x.id===pendingDelete.id);data.tasks=data.tasks.filter(x=>x.id!==pendingDelete.id);if(t)log(`تسک «${t.title}» حذف شد.`)}else if(pendingDelete.type==='worktype'){const w=data.workTypes.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.workTypeId===pendingDelete.id)t.workTypeId=null});data.workTypes=data.workTypes.filter(x=>x.id!==pendingDelete.id);if(w)log(`نوع کار «${w.name}» حذف شد.`)}else if(pendingDelete.type==='member'){const m=data.members.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.personId===pendingDelete.id)t.personId=null});data.members=data.members.filter(x=>x.id!==pendingDelete.id);if(m)log(`عضو «${m.name}» حذف شد.`)}pendingDelete=null;closeModal('deleteConfirmModal');save('حذف انجام شد.')};
+$('cancelDeleteBtn').onclick=()=>{pendingDelete=null;closeModal('deleteConfirmModal')};$('confirmDeleteBtn').onclick=()=>{if(!isAdmin){toast('حذف فقط برای ادمین مجاز است.');return}if(!pendingDelete)return;if(pendingDelete.type==='task'){const t=data.tasks.find(x=>x.id===pendingDelete.id);data.tasks=data.tasks.filter(x=>x.id!==pendingDelete.id);if(t)log(`تسک «${t.title}» حذف شد.`)}else if(pendingDelete.type==='worktype'){const w=data.workTypes.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.workTypeId===pendingDelete.id)t.workTypeId=null});data.workTypes=data.workTypes.filter(x=>x.id!==pendingDelete.id);if(w)log(`نوع کار «${w.name}» حذف شد.`)}else if(pendingDelete.type==='member'){const m=data.members.find(x=>x.id===pendingDelete.id);data.tasks.forEach(t=>{if(t.personId===pendingDelete.id)t.personId=null});data.members=data.members.filter(x=>x.id!==pendingDelete.id);if(m)log(`عضو «${m.name}» حذف شد.`)}pendingDelete=null;closeModal('deleteConfirmModal');save('حذف انجام شد.')};
 ['search','personFilter','workTypeFilter','statusFilter','priorityFilter','sortFilter'].forEach(id=>$(id).addEventListener(id==='search'?'input':'change',renderAllTasks));
 $('clearActivityBtn').onclick=()=>{if(!isAdmin)return;activity=[];localStorage.setItem(ACT,'[]');renderActivity();renderLiveFeed();toast('تاریخچه محلی پاک شد.')};$('clearAllBtn').onclick=()=>alert('برای امنیت، حذف یکجای داده‌های آنلاین در V24 غیرفعال شده است.');
 function download(name,text,type){const blob=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
@@ -1267,7 +1310,7 @@ $('importJsonInput').onchange=async e=>{
   alert('انتقال با موفقیت انجام شد: '+summary);
  }catch(err){console.error(err);alert('انتقال انجام نشد: '+(err?.message||String(err)))}
 };
-$('changePasswordBtn').onclick=openChangePassword;
+$('changeAvatarBtn').onclick=openAvatarModal;$('saveAvatarBtn').onclick=saveOwnAvatar;$('selfAvatarFile').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('selfAvatarPreview').innerHTML=`<img src="${r.result}" alt="پیش‌نمایش">`};r.readAsDataURL(f)});$('changePasswordBtn').onclick=openChangePassword;
 $('savePasswordBtn').onclick=saveNewPassword;
 $('cpConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')saveNewPassword()});
 $('loginBtn').onclick=doLogin;$('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});$('loginUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPassword').focus()});
