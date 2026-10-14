@@ -209,7 +209,7 @@ body.auth-locked .app{display:none}
 <div id="toast" class="toast"></div>
 <div class="topbar">
 <div class="title"><h1 id="pageTitle">داشبورد</h1><p id="todayText"></p></div>
-<div class="actions"><span class="online-pill"><i class="online-dot"></i> آنلاین</span><span class="user-chip" id="currentUserChip">—</span><button class="ghost" id="logoutBtn">خروج</button><button class="ghost admin-control" id="quickMemberBtn">+ عضو</button><button class="primary admin-control" id="addBtn">+ تسک جدید</button></div>
+<div class="actions"><span class="online-pill"><i class="online-dot"></i> آنلاین</span><span class="user-chip" id="currentUserChip">—</span><button class="ghost" id="changePasswordBtn">تغییر رمز عبور</button><button class="ghost" id="logoutBtn">خروج</button><button class="ghost admin-control" id="quickMemberBtn">+ عضو</button><button class="primary admin-control" id="addBtn">+ تسک جدید</button></div>
 </div>
 
 <section class="page active" id="page-dashboard">
@@ -403,6 +403,18 @@ body.auth-locked .app{display:none}
 </div></div>
 
 
+<div class="modal" id="changePasswordModal"><div class="modal-card" style="width:min(520px,100%)">
+<h2 style="margin-top:0">تغییر رمز عبور</h2>
+<p style="color:#718096;font-size:12px;line-height:1.9;margin-top:-4px">برای امنیت بیشتر، ابتدا رمز فعلی خود را وارد کنید. رمز جدید حداقل ۸ کاراکتر باشد.</p>
+<div style="display:grid;gap:12px">
+<div><label>رمز فعلی</label><input id="cpCurrent" type="password" autocomplete="current-password" placeholder="رمز فعلی"></div>
+<div><label>رمز جدید</label><input id="cpNew" type="password" autocomplete="new-password" placeholder="حداقل ۸ کاراکتر"></div>
+<div><label>تکرار رمز جدید</label><input id="cpConfirm" type="password" autocomplete="new-password" placeholder="رمز جدید را دوباره وارد کنید"></div>
+<div id="cpMessage" style="display:none;border-radius:10px;padding:10px;font-size:12px;line-height:1.8"></div>
+</div>
+<div class="modal-actions"><button class="primary" id="savePasswordBtn">ذخیره رمز جدید</button><button class="ghost" data-close="changePasswordModal">انصراف</button></div>
+</div></div>
+
 <div class="alarm-banner" id="alarmBanner">
 <h3>⏰ یادآور تسک</h3>
 <p id="alarmText"></p>
@@ -412,6 +424,7 @@ body.auth-locked .app{display:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
+// V27: self-service authenticated password change for every user
 const KEY='team_manager_dashboard_alltasks_v24_cache', ACT='team_manager_dashboard_alltasks_activity_v24';
 const SUPABASE_URL='https://tubcvprrceyjzhaxmvhy.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_eOyoTZAYcQNMc4sgncR3Mg_CeqqAav1';
@@ -642,6 +655,31 @@ async function save(msg=''){
  try{await syncAllToSupabase();if(msg)toast(msg+' • ذخیره آنلاین شد.')}catch(e){console.error(e);toast('خطا در ذخیره آنلاین؛ تغییر را دوباره بررسی کنید.');alert('ذخیره آنلاین انجام نشد: '+(e.message||e))}
 }
 function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
+function openChangePassword(){
+ $('cpCurrent').value='';$('cpNew').value='';$('cpConfirm').value='';
+ const m=$('cpMessage');m.style.display='none';m.textContent='';
+ $('savePasswordBtn').disabled=false;openModal('changePasswordModal');setTimeout(()=>$('cpCurrent').focus(),50);
+}
+async function saveNewPassword(){
+ const current=$('cpCurrent').value,newPw=$('cpNew').value,confirmPw=$('cpConfirm').value,m=$('cpMessage'),btn=$('savePasswordBtn');
+ const show=(text,ok=false)=>{m.textContent=text;m.style.display='block';m.style.background=ok?'#edf9f2':'#fff0f0';m.style.color=ok?'#187a46':'#b92d2d';m.style.border='1px solid '+(ok?'#bfe8cf':'#f0caca')};
+ if(!current||!newPw||!confirmPw){show('هر سه فیلد را کامل کنید.');return}
+ if(newPw.length<8){show('رمز جدید باید حداقل ۸ کاراکتر باشد.');return}
+ if(newPw!==confirmPw){show('رمز جدید و تکرار آن یکسان نیستند.');return}
+ if(current===newPw){show('رمز جدید باید با رمز فعلی متفاوت باشد.');return}
+ const username=normalizeUsername(currentProfile?.username||'');
+ if(!username){show('نام کاربری حساب پیدا نشد.');return}
+ btn.disabled=true;btn.textContent='در حال تغییر رمز...';
+ try{
+  const {error:verifyError}=await sb.auth.signInWithPassword({email:username+'@'+INTERNAL_EMAIL_DOMAIN,password:current});
+  if(verifyError){show('رمز فعلی صحیح نیست.');return}
+  const {error}=await sb.auth.updateUser({password:newPw});
+  if(error)throw error;
+  $('cpCurrent').value='';$('cpNew').value='';$('cpConfirm').value='';show('رمز عبور با موفقیت تغییر کرد ✓',true);
+  setTimeout(()=>closeModal('changePasswordModal'),1400);
+ }catch(e){console.error(e);show('تغییر رمز انجام نشد. دوباره تلاش کنید.')}
+ finally{btn.disabled=false;btn.textContent='ذخیره رمز جدید'}
+}
 function setPage(name){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));
@@ -1229,6 +1267,9 @@ $('importJsonInput').onchange=async e=>{
   alert('انتقال با موفقیت انجام شد: '+summary);
  }catch(err){console.error(err);alert('انتقال انجام نشد: '+(err?.message||String(err)))}
 };
+$('changePasswordBtn').onclick=openChangePassword;
+$('savePasswordBtn').onclick=saveNewPassword;
+$('cpConfirm').addEventListener('keydown',e=>{if(e.key==='Enter')saveNewPassword()});
 $('loginBtn').onclick=doLogin;$('loginPassword').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});$('loginUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('loginPassword').focus()});
 $('logoutBtn').onclick=async()=>{clearInterval(sessionKeepAliveTimer);clearInterval(dataAutoRefreshTimer);clearInterval(realtimeWatchdogTimer);if(realtimeChannel)await sb.removeChannel(realtimeChannel);await sb.auth.signOut();location.reload()};
 sb.auth.onAuthStateChange((event,session)=>{
