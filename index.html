@@ -194,22 +194,18 @@ body.auth-locked .app{display:none}
 .routine-legacy{margin-top:18px;border:1px dashed #e3b860;background:#fffaf0;border-radius:12px;padding:12px}.routine-legacy h3{margin:0 0 8px;font-size:13px}.routine-legacy-item{padding:8px 10px;border-top:1px solid #f0dfba;font-size:11px}.routine-legacy-item:first-of-type{border-top:0}
 @media(max-width:700px){.routine-summary,.routine-filters{grid-template-columns:1fr}}
 
-/* V34 — managerial “today at a glance” workspace */
-.team-today-shell{display:block}
-.team-today-people{display:flex;flex-direction:row;gap:13px;align-items:flex-start;overflow-x:auto;padding:8px 8px 13px;margin-bottom:14px;background:#fff;border:1px solid #e6edf5;border-radius:20px;box-shadow:0 8px 24px rgba(31,74,125,.05)}
-.team-today-person{min-width:86px;width:86px;border:0;background:transparent;padding:5px 3px;cursor:pointer;text-align:center;border-radius:15px;transition:.18s ease}
-.team-today-person:hover{transform:translateY(-2px);background:#f7faff}.team-today-person.active{background:#edf5ff;box-shadow:inset 0 0 0 2px #2f80ed}
-.team-today-avatar{width:62px;height:62px;border-radius:50%;margin:0 auto 5px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#e8f2ff,#f6f9ff);border:2px solid #d7e6f7;box-shadow:0 6px 15px rgba(31,74,125,.10);font-size:20px;font-weight:900;color:#2f6ea8}
-.team-today-person.active .team-today-avatar{border-color:#2f80ed;box-shadow:0 7px 18px rgba(47,128,237,.18)}
-.team-today-avatar img{width:100%;height:100%;object-fit:cover}.team-today-name{font-size:9px;font-weight:800;color:#344258;line-height:1.35;white-space:normal}.team-today-count{font-size:8px;color:#9aa5b4;margin-top:2px}
-.team-today-board{position:relative;background:linear-gradient(145deg,#fff,#fbfdff);border:1px solid #dfe7f1;border-radius:22px;min-height:390px;padding:20px;box-shadow:0 14px 34px rgba(25,58,96,.06)}
-.team-today-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.team-today-identity{display:flex;align-items:center;gap:10px}.team-today-miniavatar{width:48px;height:48px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#edf5ff;border:2px solid #d6e7fb;font-weight:900;color:#2f6ea8}.team-today-miniavatar img{width:100%;height:100%;object-fit:cover}.team-today-title{font-size:16px;font-weight:950}.team-today-sub{font-size:10px;color:#98a3b2;margin-top:2px}
-.team-today-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:10px 0 13px}.team-today-kpi{border:1px solid #edf0f5;background:#f8fafc;border-radius:13px;padding:10px;text-align:center}.team-today-kpi b{display:block;font-size:18px}.team-today-kpi span{font-size:9px;color:#8793a4}
-.team-today-openbar{width:100%;display:flex;align-items:center;justify-content:space-between;border:1px solid #e7ebf1;background:#fafbfd;border-radius:11px;padding:9px 12px;margin:0 0 12px;cursor:pointer;color:#536174;font-size:10px;font-weight:800}.team-today-openbar:hover{background:#f5f8fc}.team-today-openbar b{font-size:11px;color:#344258}.team-today-openbar .count{background:#eef2f6;color:#697789;border-radius:99px;padding:3px 7px;margin-right:5px}.team-today-openlist{display:grid;gap:6px;margin:-4px 0 12px;padding:9px;border:1px solid #edf0f4;border-radius:12px;background:#fcfdfe}.team-today-openitem{display:grid;grid-template-columns:minmax(0,1fr) 110px 70px;gap:8px;align-items:center;padding:7px 8px;border-bottom:1px solid #eef1f5;font-size:9px}.team-today-openitem:last-child{border-bottom:0}.team-today-openitem strong{font-size:10px;color:#344258}.team-today-openitem span{color:#9aa4b2}
-.team-today-list{display:grid;gap:8px}.team-today-item{display:grid;grid-template-columns:30px 86px minmax(0,1fr) 92px 64px;gap:9px;align-items:center;border:1px solid #e7ebf1;border-radius:13px;padding:9px 10px;background:#fff;transition:.15s ease}.team-today-item:hover{box-shadow:0 5px 15px rgba(26,55,92,.06)}.team-today-item.done{background:#f5fbf7;border-color:#d8ecdf}.team-today-item.late{border-right:4px solid #d84b4b}.team-today-item.doing{border-right:4px solid #d2a514}.team-today-item.routine{border-right:4px solid #9aa4b2}.team-today-check input{width:17px;height:17px}.team-today-time{font-size:10px;font-weight:800;color:#637086;direction:ltr;text-align:center}.team-today-task-title{font-size:13px;font-weight:950;color:#172235}.team-today-task-meta{font-size:9px;color:#a1a9b5;margin-top:4px;line-height:1.5;font-weight:400}.team-today-type{display:inline-block;background:#f1f3f6;color:#929ca9;border-radius:7px;padding:3px 7px;margin-left:5px;font-weight:500}.team-today-desc{color:#a6aeb9;font-weight:400}.team-today-kind{font-size:9px;font-weight:600;padding:5px 7px;border-radius:99px;text-align:center;background:#f0f2f5;color:#8792a1}.team-today-kind.routine{background:#f0f2f5;color:#8792a1}.team-today-actions{text-align:left}.team-today-empty{padding:38px 18px;text-align:center;color:#9aa5b4;border:1px dashed #dce3ed;border-radius:16px;background:#fbfcfe}
-.required-star{color:#d9363e;font-weight:950;margin-right:3px}.field-error{font-size:9px;color:#c9343b;margin-top:4px;display:none}.field-invalid{border-color:#d9363e!important;box-shadow:0 0 0 2px rgba(217,54,62,.08)!important}.form-error-summary{display:none;background:#fff3f3;border:1px solid #f0c6c8;color:#a92f35;border-radius:10px;padding:9px 11px;margin:0 0 12px;font-size:10px;line-height:1.7}
-@media(max-width:850px){.team-today-item{grid-template-columns:28px 72px minmax(0,1fr) 58px}.team-today-kind{display:none}.team-today-kpis{grid-template-columns:repeat(2,1fr)}.team-today-openitem{grid-template-columns:1fr 90px}}
-@media(max-width:560px){.team-today-item{grid-template-columns:26px 1fr 58px}.team-today-time{display:none}.team-today-head{align-items:flex-start;flex-direction:column}.team-today-actions{grid-column:3}.team-today-avatar{width:56px;height:56px}.team-today-openitem{grid-template-columns:1fr}.team-today-openitem span:nth-child(2){display:none}}
+/* V35 — approved “team today” dashboard visual */
+.today-dashboard-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 14px;padding:0 4px}.today-dashboard-header h2{font-size:23px;margin:0 0 5px;color:#111827;font-weight:950}.today-date-pill{background:#fff;border:1px solid #dfe7f1;border-radius:15px;padding:10px 15px;box-shadow:0 5px 16px rgba(31,74,125,.05);font-size:11px;font-weight:800;color:#43516a;white-space:nowrap}
+.team-today-shell{display:block}.team-today-people{display:flex;flex-direction:row;gap:16px;align-items:flex-start;overflow-x:auto;padding:15px 18px 12px;margin-bottom:14px;background:#fff;border:1px solid #e7edf5;border-radius:18px;box-shadow:0 8px 24px rgba(31,74,125,.045)}
+.team-today-person{position:relative;min-width:88px;width:88px;border:0;background:transparent;padding:5px 3px 7px;cursor:pointer;text-align:center;border-radius:14px;transition:.18s ease}.team-today-person:hover{transform:translateY(-2px);background:#f8fbff}.team-today-person.active{background:#f6faff;box-shadow:inset 0 0 0 2px #1478ff}
+.team-today-avatar{width:62px;height:62px;border-radius:50%;margin:0 auto 6px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#f4f7fb;border:2px solid #cbd7e6;box-shadow:0 5px 12px rgba(31,74,125,.08);font-size:20px;font-weight:900;color:#2f6ea8}.team-today-person.active .team-today-avatar{border-color:#16a36a;box-shadow:0 0 0 3px #e9f8f1}.team-today-avatar img{width:100%;height:100%;object-fit:cover}.team-today-name{font-size:9px;font-weight:850;color:#27364e;line-height:1.35}.team-today-count{font-size:8px;color:#9aa5b4;margin-top:2px}
+.team-today-board{position:relative;background:#fff;border:1px solid #e2e9f2;border-radius:18px;min-height:390px;padding:18px;box-shadow:0 12px 30px rgba(25,58,96,.05)}
+.team-today-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}.team-today-identity{display:flex;align-items:center;gap:12px;min-width:240px}.team-today-miniavatar{width:72px;height:72px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#edf5ff;border:3px solid #198d72;box-shadow:0 0 0 3px #eef8f5;font-weight:900;color:#2f6ea8}.team-today-miniavatar img{width:100%;height:100%;object-fit:cover}.team-today-title{font-size:20px;font-weight:950;color:#17233b}.team-today-sub{font-size:10px;color:#8995a7;margin-top:4px}
+.team-today-kpis{flex:1;display:grid;grid-template-columns:repeat(4,minmax(105px,1fr));gap:10px;margin:0}.team-today-kpi{border:0;border-radius:14px;padding:12px 9px;text-align:center;min-height:72px;display:flex;flex-direction:column;justify-content:center}.team-today-kpi:nth-child(1){background:#eef6ff;color:#1266d6}.team-today-kpi:nth-child(2){background:#ecfaf2;color:#0a9c57}.team-today-kpi:nth-child(3){background:#fff7e7;color:#e88b00}.team-today-kpi:nth-child(4){background:#fff0f2;color:#e43c47}.team-today-kpi b{display:block;font-size:21px;font-weight:950}.team-today-kpi span{font-size:9px;color:inherit;margin-top:3px;font-weight:800}
+.team-today-openbar{width:100%;display:flex;align-items:center;justify-content:space-between;border:1px solid #e8edf3;background:#fafbfd;border-radius:10px;padding:8px 12px;margin:4px 0 12px;cursor:pointer;color:#697688;font-size:9px;font-weight:700}.team-today-openbar:hover{background:#f5f8fc}.team-today-openbar b{font-size:10px;color:#4b596c}.team-today-openbar .count{background:#edf1f5;color:#778394;border-radius:99px;padding:2px 7px;margin-right:5px}.team-today-openlist{display:grid;gap:5px;margin:-5px 0 12px;padding:8px;border:1px solid #edf0f4;border-radius:10px;background:#fcfdfe}.team-today-openitem{display:grid;grid-template-columns:minmax(0,1fr) 110px 85px;gap:8px;align-items:center;padding:7px 8px;border-bottom:1px solid #eef1f5;font-size:9px}.team-today-openitem:last-child{border-bottom:0}.team-today-openitem strong{font-size:10px;color:#344258}.team-today-openitem span{color:#9aa4b2}
+.team-today-section{border:1px solid #e4eaf2;border-radius:13px;overflow:hidden;margin-top:10px;background:#fff}.team-today-section-title{font-size:16px;font-weight:950;color:#17233b;padding:12px 16px;border-bottom:1px solid #e8edf3;background:#fcfdff}.team-today-table-wrap{overflow-x:auto}.team-today-table{width:100%;border-collapse:collapse;min-width:900px}.team-today-table th{font-size:9px;color:#56647a;font-weight:800;background:#fbfcfe;padding:9px 8px;border-bottom:1px solid #e6ebf2;white-space:nowrap}.team-today-table td{font-size:9px;color:#556176;padding:9px 8px;border-bottom:1px solid #edf1f5;text-align:center;vertical-align:middle}.team-today-table tr:last-child td{border-bottom:0}.team-today-table tr:hover td{background:#fcfdff}.team-today-task-title{font-size:11px;font-weight:950;color:#18243b}.team-today-type{display:inline-block;background:#f0f2f5;color:#929ca9;border-radius:7px;padding:4px 8px;font-weight:500;white-space:nowrap}.team-today-desc{color:#a7aeb8;font-weight:400;line-height:1.5}.team-today-time{font-size:9px;color:#788496;direction:ltr;white-space:nowrap}.team-today-status{display:inline-block;padding:4px 8px;border-radius:7px;font-size:8px;font-weight:800;white-space:nowrap}.team-today-status.done{background:#e9f8ef;color:#12a15d}.team-today-status.doing{background:#eaf3ff;color:#1478ff}.team-today-status.todo{background:#fff0f1;color:#ed4b53}.team-today-status.late{background:#fff0f1;color:#e33b45}.team-today-priority{display:inline-block;padding:4px 8px;border-radius:7px;font-size:8px;font-weight:800}.team-today-priority.high{background:#fff0f1;color:#ed3d49}.team-today-priority.medium{background:#fff6e4;color:#df8b00}.team-today-priority.low{background:#eef5ff;color:#3976bd}.team-today-check input{width:16px;height:16px;accent-color:#1478ff}.team-today-empty{padding:34px 18px;text-align:center;color:#9aa5b4;background:#fbfcfe}.team-today-routine-title{font-size:11px;font-weight:850;color:#3f4c60}.team-today-actions .smallbtn{font-size:8px;padding:5px 8px}
+@media(max-width:980px){.team-today-head{align-items:flex-start;flex-direction:column}.team-today-kpis{width:100%;grid-template-columns:repeat(4,1fr)}.team-today-openitem{grid-template-columns:1fr 90px}.today-dashboard-header{align-items:flex-start}}
+@media(max-width:620px){.team-today-kpis{grid-template-columns:repeat(2,1fr)}.team-today-avatar{width:56px;height:56px}.team-today-person{min-width:76px;width:76px}.team-today-openitem{grid-template-columns:1fr}.team-today-openitem span:nth-child(2){display:none}.today-dashboard-header{flex-direction:column}.team-today-miniavatar{width:60px;height:60px}.team-today-title{font-size:17px}}
 
 
 </style>
@@ -223,7 +219,6 @@ body.auth-locked .app{display:none}
 <div class="admin-pill">دسترسی: <b id="accessRoleText">در حال بررسی...</b></div>
 <nav class="nav">
 <button class="active" data-page="dashboard">داشبورد</button>
-<button data-page="teamtoday">نمای امروز تیم</button>
 <button data-page="today">تسک‌های امروز</button>
 <button data-page="all">همه تسک‌ها <span id="taskMenuCount" style="float:left;background:rgba(255,255,255,.14);padding:2px 7px;border-radius:99px;font-size:10px">0</span></button>
 <button data-page="routines">کارهای روتین <span id="routineMenuCount" style="float:left;background:rgba(255,255,255,.14);padding:2px 7px;border-radius:99px;font-size:10px">0</span></button>
@@ -243,73 +238,17 @@ body.auth-locked .app{display:none}
 </div>
 
 <section class="page active" id="page-dashboard">
-<div class="stats">
-<div class="stat"><div class="num blue" id="totalCount">0</div><div class="label">کل تسک‌ها</div></div>
-<div class="stat"><div class="num green" id="doneCount">0</div><div class="label">انجام‌شده</div></div>
-<div class="stat"><div class="num orange" id="doingCount">0</div><div class="label">درحال انجام</div></div>
-<div class="stat"><div class="num red" id="lateCount">0</div><div class="label">عقب‌افتاده</div></div>
-<div class="stat"><div class="num purple" id="blockedCount">0</div><div class="label">متوقف</div></div>
-</div>
-
-<div class="panel">
-  <div class="toolbar">
+  <div class="today-dashboard-header">
     <div>
-      <h2 style="margin-bottom:4px">نمای مدیریتی</h2>
-      <div class="hint">فقط مواردی که برای تصمیم‌گیری و پیگیری سریع مهم هستند</div>
+      <h2>نمای امروز تیم</h2>
+      <div class="hint" id="teamTodayHint">برای دیدن برنامه امروز هر فرد روی عکس او کلیک کنید.</div>
     </div>
-
-  </div>
-
-  <div class="management-grid">
-    <div class="management-card"><strong class="red" id="mgLate">0</strong><span>تسک عقب‌افتاده</span></div>
-    <div class="management-card"><strong class="orange" id="mgToday">0</strong><span>موعد امروز و باز</span></div>
-    <div class="management-card"><strong class="purple" id="mgBlocked">0</strong><span>تسک متوقف</span></div>
-    <div class="management-card"><strong class="blue" id="mgMedani">0</strong><span>امور محوله آقای مدنی</span></div>
-  </div>
-
-  <div class="section-title">تعداد کارها به تفکیک نوع کار</div>
-  <div class="type-summary" id="managerTypeSummary"></div>
-
-</div>
-
-<div class="panel dashboard-team-panel">
-<div class="toolbar"><div><h2>وضعیت اعضای تیم</h2><div class="hint">برای دیدن برنامه کاری هر فرد روی کارت او کلیک کنید.</div></div></div>
-<div class="dashboard-members" id="dashboardMembers"></div>
-</div>
-<div class="panel dashboard-alltasks-panel">
-  <div class="toolbar">
-    <div><h2 style="margin-bottom:4px">تمام تسک‌ها</h2><div class="hint">نمای کامل تسک‌های تیم در صفحه اصلی داشبورد</div></div>
-    <button class="primary" data-open-task>+ تسک جدید</button>
-  </div>
-  <div class="legend-time">
-      <span><i style="background:#d84b4b"></i> مهلت تمام‌شده</span>
-      <span><i style="background:#e79b20"></i> نزدیک مهلت</span>
-      <span><i style="background:#d2a514"></i> در حال انجام</span>
-      <span><i style="background:#31a76a"></i> انجام‌شده / زمان کافی</span>
-      <span>مبنای رنگ: نسبت زمان سپری‌شده از شروع تا پایان</span>
-    </div>
-    <div class="table-wrap" style="margin-top:8px"><table id="dashboardAllTasksTable"></table></div>
-</div>
-<div class="panel">
-  <div class="toolbar">
-    <div><h2 style="margin-bottom:4px">آخرین تغییرات تیم</h2><div class="hint">ایجاد، شروع، تغییر وضعیت، ویرایش و پایان تسک‌ها</div></div>
-    <span class="sync-pill"><i class="sync-dot"></i> همگام‌سازی آنلاین</span>
-  </div>
-  <div class="live-feed" id="liveFeed"></div>
-</div>
-</section>
-
-<section class="page" id="page-teamtoday">
-<div class="panel">
-  <div class="toolbar">
-    <div><h2 style="margin-bottom:4px">نمای امروز تیم</h2><div class="hint" id="teamTodayHint">یک نگاه مدیریتی به کارهایی که اعضای تیم امروز در حال انجام دارند.</div></div>
-    <button class="primary" id="teamTodayNewTaskBtn">+ تسک امروز</button>
+    <div class="today-date-pill" id="teamTodayDatePill"></div>
   </div>
   <div class="team-today-shell">
-    <div class="team-today-board" id="teamTodayBoard"></div>
     <div class="team-today-people" id="teamTodayPeople"></div>
+    <div class="team-today-board" id="teamTodayBoard"></div>
   </div>
-</div>
 </section>
 
 <section class="page" id="page-today">
@@ -516,7 +455,7 @@ body.auth-locked .app{display:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
-// V34: approved team-today UI + required-field validation + collapsible open-work backlog
+// V35: dashboard itself is the approved team-today UI + validation + open-work backlog
 const KEY='team_manager_dashboard_alltasks_v24_cache', ACT='team_manager_dashboard_alltasks_activity_v24';
 const SUPABASE_URL='https://tubcvprrceyjzhaxmvhy.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_eOyoTZAYcQNMc4sgncR3Mg_CeqqAav1';
@@ -534,7 +473,7 @@ let editTaskId=null,editRoutineId=null,editMemberId=null,editWorkTypeId=null,pen
 const $=id=>document.getElementById(id);
 const statusLabel={todo:'شروع نشده',doing:'در حال انجام',done:'انجام شده',blocked:'متوقف'};
 const priorityLabel={high:'بالا',medium:'متوسط',low:'پایین'};
-const pageTitles={dashboard:'داشبورد',teamtoday:'نمای امروز تیم',today:'تسک‌های امروز',all:'همه تسک‌ها',routines:'کارهای روتین',members:'اعضای تیم',worktypes:'نوع کار',calendar:'تقویم',reports:'گزارش‌ها',activity:'تاریخچه',backup:'پشتیبان‌گیری'};
+const pageTitles={dashboard:'نمای امروز تیم',today:'تسک‌های امروز',all:'همه تسک‌ها',routines:'کارهای روتین',members:'اعضای تیم',worktypes:'نوع کار',calendar:'تقویم',reports:'گزارش‌ها',activity:'تاریخچه',backup:'پشتیبان‌گیری'};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function showSync(on,text='در حال ذخیره آنلاین...'){const e=$('syncOverlay');if(!e)return;e.textContent=text;e.style.display=on?'block':'none'}
@@ -908,65 +847,23 @@ function teamTodayOpenBacklogHtml(memberId){
 }
 function renderTeamToday(){
  const people=teamTodayMembers(),rail=$('teamTodayPeople'),board=$('teamTodayBoard');if(!rail||!board)return;
+ if($('teamTodayDatePill'))$('teamTodayDatePill').textContent=new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
  if(!people.length){rail.innerHTML='';board.innerHTML='<div class="team-today-empty">عضو فعالی برای نمایش وجود ندارد.</div>';return}
  if(!people.some(m=>Number(m.id)===Number(activeTeamTodayMemberId)))activeTeamTodayMemberId=people[0].id;
  const selected=people.find(m=>Number(m.id)===Number(activeTeamTodayMemberId))||people[0];
- rail.innerHTML=people.map(m=>{const items=teamTodayItems(m.id),open=items.filter(x=>!x.done).length;return `<button class="team-today-person ${Number(m.id)===Number(selected.id)?'active':''}" data-team-today-member="${m.id}" title="نمایش کارهای امروز ${esc(m.name)}"><div class="team-today-avatar">${avatarHtml(m)}</div><div class="team-today-name">${esc(m.name)}</div><div class="team-today-count">${faDigits(items.length)} کار • ${faDigits(open)} باز</div></button>`}).join('');
+ rail.innerHTML=people.map(m=>{const items=teamTodayItems(m.id),open=items.filter(x=>!x.done).length;return `<button class="team-today-person ${Number(m.id)===Number(selected.id)?'active':''}" data-team-today-member="${m.id}" title="نمایش کارهای امروز ${esc(m.name)}"><div class="team-today-avatar">${avatarHtml(m)}</div><div class="team-today-name">${esc(m.name)}</div><div class="team-today-count">${faDigits(items.length)} کار${open?` • ${faDigits(open)} باز`:''}</div></button>`}).join('');
  const items=teamTodayItems(selected.id),done=items.filter(x=>x.done).length,doing=items.filter(x=>x.kind==='task'&&x.obj.status==='doing'&&!x.done).length,remaining=items.length-done;
- $('teamTodayHint').textContent=isAdmin?'برای دیدن برنامه امروز هر فرد روی عکس او کلیک کنید؛ اعضا می‌توانند کارهای خودشان را تیک بزنند و ویرایش کنند.':'کارهای امروز خودتان را از همین صفحه به‌روزرسانی، تکمیل یا ویرایش کنید.';
- const rows=items.length?items.map(item=>{
-   if(item.kind==='task'){
-     const t=item.obj,late=isLate(t),cls=item.done?'done':late?'late':t.status==='doing'?'doing':'';
-     return `<div class="team-today-item ${cls}"><div class="team-today-check"><input type="checkbox" data-action="toggle" data-id="${t.id}" ${item.done?'checked':''} ${!canEditTask(t)?'disabled':''}></div><div class="team-today-time">${esc(todayTimeLabel(t))}</div><div><div class="team-today-task-title">${esc(t.title)}</div><div class="team-today-task-meta"><span class="team-today-type">${esc(workTypeName(t.workTypeId))}</span>${t.action?`<span class="team-today-desc">${esc(t.action)}</span>`:''}</div></div><div class="team-today-kind">${item.done?'انجام‌شده':late?'عقب‌افتاده':esc(statusLabel[t.status]||'تسک')}</div><div class="team-today-actions">${canEditTask(t)?`<button class="smallbtn action-edit" data-action="edit-task" data-id="${t.id}">ویرایش</button>`:'<span class="readonly-note">مشاهده</span>'}</div></div>`;
-   }
-   const r=item.obj;
-   return `<div class="team-today-item routine ${item.done?'done':''}"><div class="team-today-check"><input type="checkbox" data-action="routine-toggle" data-id="${r.id}" ${item.done?'checked':''} ${!canEditRoutine(r)?'disabled':''}></div><div class="team-today-time">روزانه</div><div><div class="team-today-task-title">${esc(r.title)}</div><div class="team-today-task-meta"><span class="team-today-type">${esc(workTypeName(r.workTypeId))}</span>${r.action?`<span class="team-today-desc">${esc(r.action)}</span>`:''}</div></div><div class="team-today-kind routine">${item.done?'انجام‌شده':'روتین روزانه'}</div><div class="team-today-actions">${canEditRoutine(r)?`<button class="smallbtn action-edit" data-action="edit-routine" data-id="${r.id}">ویرایش</button>`:'<span class="readonly-note">مشاهده</span>'}</div></div>`;
- }).join(''):'<div class="team-today-empty">برای امروز کاری برای این فرد ثبت نشده است.</div>';
- board.innerHTML=`<div class="team-today-head"><div class="team-today-identity"><div class="team-today-miniavatar">${avatarHtml(selected)}</div><div><div class="team-today-title">کارهای امروز ${esc(selected.name)}</div><div class="team-today-sub">${esc(selected.role||'عضو تیم')} • ${new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',month:'long',day:'numeric'})}</div></div></div>${isAdmin?`<button class="primary" data-team-today-new="${selected.id}">+ تسک برای این فرد</button>`:''}</div><div class="team-today-kpis"><div class="team-today-kpi"><b>${faDigits(items.length)}</b><span>کل کار امروز</span></div><div class="team-today-kpi"><b class="green">${faDigits(done)}</b><span>انجام‌شده</span></div><div class="team-today-kpi"><b class="orange">${faDigits(doing)}</b><span>در حال انجام</span></div><div class="team-today-kpi"><b class="blue">${faDigits(remaining)}</b><span>باقی‌مانده</span></div></div>${teamTodayOpenBacklogHtml(selected.id)}<div class="team-today-list">${rows}</div>`;
+ $('teamTodayHint').textContent=isAdmin?'برای دیدن برنامه امروز هر فرد روی عکس او کلیک کنید.':'کارهای امروز خودتان را از همین صفحه به‌روزرسانی، تکمیل یا ویرایش کنید.';
+ const taskItems=items.filter(x=>x.kind==='task'),routineItems=items.filter(x=>x.kind==='routine');
+ const taskRows=taskItems.length?taskItems.map((item,i)=>{const t=item.obj,late=isLate(t);const st=item.done?'done':late?'late':t.status==='doing'?'doing':'todo';return `<tr><td>${faDigits(i+1)}</td><td class="team-today-check"><input type="checkbox" data-action="toggle" data-id="${t.id}" ${item.done?'checked':''} ${!canEditTask(t)?'disabled':''}></td><td><span class="team-today-type">${esc(workTypeName(t.workTypeId))}</span></td><td><div class="team-today-task-title">${esc(t.title)}</div></td><td><span class="team-today-time">${esc(todayTimeLabel(t))}</span></td><td><span class="team-today-status ${st}">${item.done?'انجام شده':late?'عقب‌افتاده':esc(statusLabel[t.status]||'شروع نشده')}</span></td><td><span class="team-today-priority ${t.priority}">${esc(priorityLabel[t.priority]||'—')}</span></td><td><span class="team-today-desc">${t.action?esc(t.action):'—'}</span></td><td class="team-today-actions">${canEditTask(t)?`<button class="smallbtn action-edit" data-action="edit-task" data-id="${t.id}">ویرایش</button>`:'<span class="readonly-note">مشاهده</span>'}</td></tr>`}).join(''):`<tr><td colspan="9"><div class="team-today-empty">برای امروز تسکی ثبت نشده است.</div></td></tr>`;
+ const routineRows=routineItems.length?routineItems.map((item,i)=>{const r=item.obj;return `<tr><td>${faDigits(i+1)}</td><td class="team-today-check"><input type="checkbox" data-action="routine-toggle" data-id="${r.id}" ${item.done?'checked':''} ${!canEditRoutine(r)?'disabled':''}></td><td><div class="team-today-routine-title">${esc(r.title)}</div></td><td>روزانه</td><td><span class="team-today-status ${item.done?'done':'doing'}">${item.done?'انجام شده':'انجام نشده'}</span></td><td><span class="team-today-desc">${r.action?esc(r.action):'—'}</span></td><td class="team-today-actions">${canEditRoutine(r)?`<button class="smallbtn action-edit" data-action="edit-routine" data-id="${r.id}">ویرایش</button>`:'<span class="readonly-note">مشاهده</span>'}</td></tr>`}).join(''):`<tr><td colspan="7"><div class="team-today-empty">کار روتینی برای این فرد ثبت نشده است.</div></td></tr>`;
+ board.innerHTML=`<div class="team-today-head"><div class="team-today-identity"><div class="team-today-miniavatar">${avatarHtml(selected)}</div><div><div class="team-today-title">${esc(selected.name)}</div><div class="team-today-sub">${esc(selected.role||'عضو تیم')}</div></div></div><div class="team-today-kpis"><div class="team-today-kpi"><b>${faDigits(items.length)}</b><span>کل کار امروز</span></div><div class="team-today-kpi"><b>${faDigits(done)}</b><span>انجام شده</span></div><div class="team-today-kpi"><b>${faDigits(doing)}</b><span>در حال انجام</span></div><div class="team-today-kpi"><b>${faDigits(remaining)}</b><span>باقی‌مانده</span></div></div></div>${teamTodayOpenBacklogHtml(selected.id)}<div class="team-today-section"><div class="team-today-section-title">تسک‌های امروز</div><div class="team-today-table-wrap"><table class="team-today-table"><thead><tr><th>ردیف</th><th>انجام</th><th>نوع کار</th><th>عنوان تسک</th><th>ساعت / زمان</th><th>وضعیت</th><th>اولویت</th><th>توضیحات</th><th>عملیات</th></tr></thead><tbody>${taskRows}</tbody></table></div></div><div class="team-today-section"><div class="team-today-section-title">کارهای روتین امروز</div><div class="team-today-table-wrap"><table class="team-today-table"><thead><tr><th>ردیف</th><th>انجام</th><th>عنوان کار روتین</th><th>زمان / تناوب</th><th>وضعیت</th><th>توضیحات</th><th>عملیات</th></tr></thead><tbody>${routineRows}</tbody></table></div></div>`;
 }
 
 function renderDashboard(){
- const t=normalTasks();
- $('totalCount').textContent=t.length;
- $('doneCount').textContent=t.filter(x=>x.status==='done').length;
- $('doingCount').textContent=t.filter(x=>x.status==='doing').length;
- $('lateCount').textContent=t.filter(isLate).length;
- $('blockedCount').textContent=t.filter(x=>x.status==='blocked').length;
-
- const openToday=t.filter(x=>(x.deadlineType||'date')==='date'&&x.due===todayISO()&&x.status!=='done').length;
- const medaniType=data.workTypes.find(w=>String(w.name).trim()==='امور محوله آقای مدنی');
- $('mgLate').textContent=t.filter(isLate).length;
- $('mgToday').textContent=openToday;
- $('mgBlocked').textContent=t.filter(x=>x.status==='blocked').length;
- $('mgMedani').textContent=medaniType?t.filter(x=>x.workTypeId===medaniType.id&&x.status!=='done').length:0;
-
- $('managerTypeSummary').innerHTML=data.workTypes.map(w=>{
-   const c=t.filter(x=>x.workTypeId===w.id).length;
-   return `<div class="type-box"><b>${c}</b><small>${esc(w.name)}</small></div>`;
- }).join('')||'<div class="sub">نوع کاری ثبت نشده است.</div>';
-
- const attention=t.filter(x=>x.status!=='done'&&(isLate(x)||x.status==='blocked'||x.priority==='high'))
-   .sort((a,b)=>{
-      const ar=isLate(a)?0:(a.status==='blocked'?1:2);
-      const br=isLate(b)?0:(b.status==='blocked'?1:2);
-      if(ar!==br)return ar-br;
-      return ((a.due||'9999')+' '+(a.dueTime||'23:59')).localeCompare((b.due||'9999')+' '+(b.dueTime||'23:59'));
-   }).slice(0,8);
-
- if($('managerAttentionList'))$('managerAttentionList').innerHTML=attention.length?attention.map(x=>{
-   const flag=isLate(x)?'عقب‌افتاده':(x.status==='blocked'?'متوقف':'اولویت بالا');
-   return `<div class="manager-item">
-      <strong>${esc(memberName(x.personId))}</strong>
-      <span>${esc(x.title)}</span>
-      <span>${esc(workTypeName(x.workTypeId))}</span>
-      <span class="${isLate(x)?'urgent':''}">${flag}</span>
-   </div>`;
- }).join(''):'<div class="sub">مورد فوری برای پیگیری وجود ندارد.</div>';
-
- $('dashboardMembers').innerHTML=data.members.filter(m=>m.status==='active').map(dashboardMemberCard).join('');
- const dashboardTasks=[...t].sort(taskColorSort);
- $('dashboardAllTasksTable').innerHTML=taskTable(dashboardTasks);
+ renderTeamToday();
 }
+
 function renderToday(){
  const list=normalTasks()
    .filter(t=>t.due===todayISO()||isLate(t)||t.status==='doing')
@@ -1038,7 +935,7 @@ function renderLiveFeed(){
 }
 
 function renderActivity(){$('activityTimeline').innerHTML=activity.length?activity.map(a=>`<div class="timeline-item"><b>${new Date(a.time).toLocaleString('fa-IR')}</b><div>${esc(a.msg)}</div></div>`).join(''):'<div style="padding:24px;color:#7a879b">تاریخچه‌ای وجود ندارد.</div>'}
-function renderAll(){$('taskMenuCount').textContent=normalTasks().length;$('todayText').textContent='امروز: '+new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',year:'numeric',month:'long',day:'numeric'});renderDashboard();renderTeamToday();renderToday();renderAllTasks();renderRoutines();renderMembers();renderWorkTypes();renderCalendar();renderReports();renderActivity();renderLiveFeed()}
+function renderAll(){$('taskMenuCount').textContent=normalTasks().length;$('todayText').textContent='امروز: '+new Date().toLocaleDateString('fa-IR-u-ca-persian',{weekday:'long',year:'numeric',month:'long',day:'numeric'});renderDashboard();renderToday();renderAllTasks();renderRoutines();renderMembers();renderWorkTypes();renderCalendar();renderReports();renderActivity();renderLiveFeed()}
 function clearFormValidation(ids,summaryId){
  ids.forEach(id=>{const el=$(id);if(!el)return;el.classList.remove('field-invalid');const old=el.parentElement?.querySelector('.field-error[data-for="'+id+'"]');if(old)old.remove()});
  const box=$(summaryId);if(box){box.style.display='none';box.innerHTML=''}
@@ -1249,7 +1146,7 @@ document.addEventListener('click',e=>{
  const add=e.target.closest('[data-team-today-new]');
  if(add){openTaskNew();setTimeout(()=>{$('tPerson').value=String(add.dataset.teamTodayNew)},0);return}
 });
-$('teamTodayNewTaskBtn').onclick=()=>{openTaskNew();if(activeTeamTodayMemberId)setTimeout(()=>{$('tPerson').value=String(activeTeamTodayMemberId)},0)};
+if($('teamTodayNewTaskBtn'))$('teamTodayNewTaskBtn').onclick=()=>{openTaskNew();if(activeTeamTodayMemberId)setTimeout(()=>{$('tPerson').value=String(activeTeamTodayMemberId)},0)};
 
 document.addEventListener('click',e=>{const p=e.target.closest('[data-routine-person-filter]');if(!p)return;const id=String(p.dataset.routinePersonFilter||'');if($('routinePersonFilter')){$('routinePersonFilter').value=id;renderRoutines();}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;if(!isAdmin&&['delete-task','edit-member','edit-worktype','delete-worktype','delete-member'].includes(b.dataset.action)){toast('این عملیات فقط برای ادمین مجاز است.');return}const id=Number(b.dataset.id),a=b.dataset.action;if(a==='edit-routine')editRoutine(id);else if(a==='delete-routine'){const r=data.routines.find(x=>Number(x.id)===id);if(r){pendingDelete={type:'routine',id};$('deleteConfirmText').innerHTML=`کار روتین <b>«${esc(r.title)}»</b> حذف شود؟<br><span class="sub">سابقه روزهای انجام‌شده این روتین نیز حذف می‌شود.</span>`;openModal('deleteConfirmModal')}}else if(a==='edit-task')editTask(id);else if(a==='delete-task'){const t=data.tasks.find(x=>x.id===id);if(t){pendingDelete={type:'task',id};$('deleteConfirmText').innerHTML=`تسک <b>«${esc(t.title)}»</b> حذف شود؟`;openModal('deleteConfirmModal')}}else if(a==='edit-member')editMember(id);else if(a==='edit-worktype')editWorkType(id);else if(a==='delete-worktype'){const w=data.workTypes.find(x=>x.id===id);if(w){pendingDelete={type:'worktype',id};$('deleteConfirmText').innerHTML=`نوع کار <b>«${esc(w.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های مرتبط حذف نمی‌شوند و بدون دسته‌بندی می‌مانند.</span>`;openModal('deleteConfirmModal')}}else if(a==='delete-member'){const m=data.members.find(x=>x.id===id);if(m){pendingDelete={type:'member',id};$('deleteConfirmText').innerHTML=`عضو <b>«${esc(m.name)}»</b> حذف شود؟<br><span class="sub">تسک‌های او حذف نمی‌شوند و بدون مسئول باقی می‌مانند.</span>`;openModal('deleteConfirmModal')}}});
